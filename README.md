@@ -1,0 +1,1 @@
+# 对OpenStack提供的api进行了封装提取
