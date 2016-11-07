@@ -40,14 +40,16 @@ def _get_tenant_securitygroups_rules_used(token_id):
 def _get_compute_quota(tenant_id):
     """根据租户id获取计算方面的配额"""
     compute_quota = {}
-    admin_token_id = get_admin_token()['access']['token']['id']
+    admin_token = get_admin_token()
+    admin_token_id = admin_token['access']['token']['id']
+    admin_tenant_id = admin_token['access']['token']['tenant']['id']
     headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
-    url = NOVA_ENDPOINT01+'/os-quota-sets/'+tenant_id + '/detail'
+    url = NOVA_ENDPOINT.format(tenant_id=admin_tenant_id)+'/os-quota-sets/'+tenant_id
     r = requests.get(url, headers=headers)
     compute_quota_list = r.json()
-    compute_quota['cores'] = compute_quota_list['quota_set']['cores']['limit']
-    compute_quota['instances'] = compute_quota_list['quota_set']['instances']['limit']
-    compute_quota['ram'] = compute_quota_list['quota_set']['ram']['limit']
+    compute_quota['cores'] = compute_quota_list['quota_set']['cores']
+    compute_quota['instances'] = compute_quota_list['quota_set']['instances']
+    compute_quota['ram'] = compute_quota_list['quota_set']['ram']
     return compute_quota
 
 
@@ -55,14 +57,10 @@ def _get_network_quota(tenant_id):
     """根据获取所有网络方面的配额"""
     admin_token_id = get_admin_token()['access']['token']['id']
     headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
-    url = NEUTRON_ENDPOINT+'/quotas'
+    url = NEUTRON_ENDPOINT+'/quotas/' + tenant_id
     r = requests.get(url, headers=headers)
     network_info_list = r.json()
-    for i in range(len(network_info_list['quotas'])):
-        if tenant_id == network_info_list['quotas'][i]['tenant_id']:
-            network_info = network_info_list['quotas'][i]
-            break
-    return network_info
+    return network_info_list['quota']
 
 
 def get_tenant_quota(tenant_id):
@@ -70,9 +68,6 @@ def get_tenant_quota(tenant_id):
     tenant_quota_info = {}
     compute_info = _get_compute_quota(tenant_id)
     network_info = _get_network_quota(tenant_id)
-    del network_info['tenant_id']
-    del network_info['rbac_policy']
-    del network_info['subnetpool']
     tenant_quota = dict(network_info, **compute_info)
     tenant_quota_info['total'] = tenant_quota
     return tenant_quota_info
@@ -93,10 +88,10 @@ def get_tenant_used_info(token_id, tenant_id):
     tenant_used_info["security_group"] = tenant_limits['limits']['absolute']['totalSecurityGroupsUsed']
     tenant_used_info["cores"] = tenant_limits['limits']['absolute']['totalCoresUsed']
     tenant_used_info["ram"] = tenant_limits['limits']['absolute']['totalRAMUsed']
-    tenant_used['used'] = tenant_used_info
+    tenant_used["used"] = tenant_used_info
     tenant_info = get_tenant_quota(tenant_id)
     tenant_quota_used = dict(tenant_used, **tenant_info)
-    return json.dumps(tenant_quota_used)
+    return tenant_quota_used
 
 
 

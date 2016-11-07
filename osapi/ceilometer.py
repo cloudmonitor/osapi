@@ -59,13 +59,13 @@ def get_one_meter(token_id, local_time, meter_name, resource_id):
         if isinstance(value, list):
             for val in value:
                 for k1, v1 in val.items():
-                    url_list.append(key+'.'+k1+'='+v1+'&')
+                    url_list.append(key+'.'+k1+'='+str(v1)+'&')
         else:
             url_list.append(key+'='+str(value)+'&')
     url_list.append("limit=1")
     # print url_list
     url = ''.join(url_list)
-    print "******" + url
+    # print "******" + url
     r = requests.get(url, headers=headers)
     return r.json()
 

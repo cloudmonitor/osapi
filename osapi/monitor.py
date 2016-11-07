@@ -29,8 +29,12 @@ if __name__ == "__main__":
     # tenant_name = get_tenants(token_id)['tenants'][0]['name']
     tenant_id = get_tenants(token_id)['tenants'][0]['id']
     # 获取租户的token
-    token_json = get_tenant_token("project02", token_id)
+    token_json = get_tenant_token("project01", token_id)
     token_id = token_json['access']['token']['id']
+    tenant_id = token_json['access']['token']['tenant']['id']
+
+
+    print get_tenant_used_info(token_id,tenant_id)
 
     # delete_port_list = get_dis_port(token_id)
     # print delete_port_list
@@ -54,4 +58,4 @@ if __name__ == "__main__":
     # print json.dumps(get_meter_func_data(token_id, "f84d2a28-2bef-4075-94c3-de8ec36e52a4", "memory.usage", "minute"))
     # print json.dumps(get_tenant_instances(token_id, tenant_id))
     # print json.dumps(get_server_port(token_id, tenant_id))
-    print delete_subnet(token_id, '{"subnet_ids":["d8f2be93-d772-491d-9827-d30bf20cc2d2","195030dc-9bf7-4c4d-a836-627e9ac757f6"]}')
+    # print delete_subnet(token_id, '{"subnet_ids":["d8f2be93-d772-491d-9827-d30bf20cc2d2","195030dc-9bf7-4c4d-a836-627e9ac757f6"]}')
