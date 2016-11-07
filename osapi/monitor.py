@@ -34,7 +34,7 @@ if __name__ == "__main__":
     tenant_id = token_json['access']['token']['tenant']['id']
 
 
-    print get_tenant_used_info(token_id,tenant_id)
+    # print get_tenant_used_info(token_id,tenant_id)
 
     # delete_port_list = get_dis_port(token_id)
     # print delete_port_list
@@ -55,7 +55,7 @@ if __name__ == "__main__":
     # print json.dumps(router_network(token_id, tenant_id))
     # print json.dumps(get_last_network_topology(token_id, tenant_id))
     # print json.dumps(get_meter_func_data(token_id, "d88d4933-f0b4-48b9-bccf-2e458c430170", "cpu_util", "day"))
-    # print json.dumps(get_meter_func_data(token_id, "f84d2a28-2bef-4075-94c3-de8ec36e52a4", "memory.usage", "minute"))
+    # print json.dumps(get_meter_func_data(token_id, "b18ff7c9-70cc-4781-ad31-af9845e005db", "memory.usage", "minute"))
     # print json.dumps(get_tenant_instances(token_id, tenant_id))
     # print json.dumps(get_server_port(token_id, tenant_id))
     # print delete_subnet(token_id, '{"subnet_ids":["d8f2be93-d772-491d-9827-d30bf20cc2d2","195030dc-9bf7-4c4d-a836-627e9ac757f6"]}')

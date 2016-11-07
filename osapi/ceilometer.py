@@ -32,7 +32,7 @@ def get_instance_resource_id(token_id, instance_id, meter_name):
     r = requests.get(CEILOMETER_ENDPOINT+'/resources', headers=headers)
     for resource in r.json():
         if meter_name.startswith("network."):
-            if 'vnic_name' in resource['metadata']:
+            if resource['resource_id'].startswith("instance-"):
                 if resource['resource_id'].find(instance_id) != -1:
                     return resource['resource_id']
         else:
