@@ -88,7 +88,7 @@ def get_list_meter(token_id, meter_name, resource_id, curr_type, limit):
         else:
             meter_info_list.append(r[0])
         if curr_type == 'minute':
-            localtime = isostring_to_time(time_to_isostring(localtime)-180)
+            localtime = isostring_to_time(time_to_isostring(localtime)-10)
         elif curr_type == 'hour':
             localtime01 = datetime.datetime.strptime(localtime, "%Y-%m-%d %H:%M:%S")
             times = localtime01 + datetime.timedelta(hours=-1)
