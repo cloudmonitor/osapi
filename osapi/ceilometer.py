@@ -84,7 +84,7 @@ def get_list_meter(token_id, meter_name, resource_id, curr_type, limit):
     for i in range(0, limit):
         r = get_one_meter(token_id, localtime, meter_name, resource_id)
         if len(r) == 0:
-            meter_info_list.append({})
+            meter_info_list.append(None)
         else:
             meter_info_list.append(r[0])
         if curr_type == 'minute':
