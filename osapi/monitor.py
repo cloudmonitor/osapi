@@ -54,7 +54,7 @@ if __name__ == "__main__":
     # print json.dumps(get_server_console(token_id, tenant_id, "664a8a84-d9b4-43fe-ba23-31b561e35907", '{"os-getVNCConsole": {"type": "novnc"}}'))
     # print json.dumps(router_network(token_id, tenant_id))
     # print json.dumps(get_last_network_topology(token_id, tenant_id))
-    # print json.dumps(get_meter_func_data(token_id, "a26d27a1-88da-485f-ab84-1f484bce78eb", "cpu_util", "minute"))
+    # print json.dumps(get_meter_func_data(token_id, "a26d27a1-88da-485f-ab84-1f484bce78eb", "cpu_util", "minute", 1))
     # print json.dumps(get_meter_func_data(token_id, "b18ff7c9-70cc-4781-ad31-af9845e005db", "memory.usage", "minute"))
     # print json.dumps(get_tenant_instances(token_id, tenant_id))
     # print json.dumps(get_server_port(token_id, tenant_id))

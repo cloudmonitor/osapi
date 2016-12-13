@@ -21,7 +21,7 @@ def isostring_to_time(s):
     return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(s)))
 
 
-def get_list_meter_func_data(token_id, instance_id, meter_name, time_type, limit):
+def get_meter_func_data(token_id, instance_id, meter_name, time_type, limit):
     resource_id = get_instance_resource_id(token_id, instance_id, meter_name)
     return get_list_meter(token_id, meter_name, resource_id, time_type, limit)
     # if time_type == "minute":
