@@ -146,7 +146,7 @@ def touch_interface(token_id, tenant_id, data, servers_id):
     """已经存在网卡绑定到虚拟机"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NOVA_ENDPOINT.format(tenant_id=tenant_id) + "/servers/" + servers_id + "/os-interface"
-    r = requests.post(url=url,data=json.dumps(data), headers=headers)
+    r = requests.post(url=url, data=json.dumps(data), headers=headers)
     return r.json()
 
 

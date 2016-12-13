@@ -17,3 +17,5 @@ NOVA_ENDPOINT = 'http://controller:8774/v2/{tenant_id}'
 NEUTRON_ENDPOINT = 'http://controller:9696/v2.0'
 CEILOMETER_ENDPOINT = 'http://controller:8777/v2'
 KEYSTONE_ENDPOINT01 = "http://controller:35357/v2.0/users"
+
+DB_CONN = "mongodb://flowdb:flowdb@192.168.1.180:27017/flowdb"
