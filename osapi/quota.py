@@ -1,6 +1,5 @@
 # _*_ coding:utf-8 _*_
 
-from flask import request
 from settings import *
 from floatingip import get_floating_ips
 from securitygroup import get_security_groups, get_security_groups_rules

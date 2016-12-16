@@ -51,7 +51,7 @@ def get_hypervisor_instances_and_interface():
     url = NOVA_ENDPOINT.format(tenant_id=admin_tenant_id)
     all_instance_info = get_all_tenant_instances()
     for instance in all_instance_info['servers']:
-        hostname = 'compute03' #gethostname()
+        hostname = gethostname()
         if instance['OS-EXT-SRV-ATTR:hypervisor_hostname'] == hostname:
             r = requests.get(url + '/servers/' + instance['id'] + "/os-interface", headers=headers)
             instance['interfaceAttachments'] = r.json()['interfaceAttachments']
