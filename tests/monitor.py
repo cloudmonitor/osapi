@@ -1,19 +1,19 @@
 # _*_ coding:utf-8 _*_
 
-from identify import *
-from nova import *
-from topology import *
-from neutron import *
-from ceilometer import *
-from firewall import *
-from settings import *
-from securitygroup import *
-from floatingip import *
-from quota import *
-from keypair import *
-from util import *
-from user import *
-from images import *
+from osapi.identify import *
+from osapi.nova import *
+from osapi.topology import *
+from osapi.neutron import *
+from osapi.ceilometer import *
+from osapi.firewall import *
+from osapi.settings import *
+from osapi.securitygroup import *
+from osapi.floatingip import *
+from osapi.quota import *
+from osapi.keypair import *
+from osapi.util import *
+from osapi.user import *
+from osapi.images import *
 
 
 if __name__ == "__main__":
