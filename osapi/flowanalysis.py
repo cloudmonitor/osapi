@@ -199,8 +199,9 @@ if __name__ == "__main__":
     # get_instance_top_dst_ip("dd", "dd")
     # get_instance_top_src_port("dd", "dd")
     # get_instance_top_dst_port("fab30037b2d54be484520cd16722f63c", "b18ff7c9-70cc-4781-ad31-af9845e005db")
-    # print get_tenant_top_instance("fab30037b2d54be484520cd16722f63c")
+    import json
+    print json.dumps(get_tenant_top_instance("fab30037b2d54be484520cd16722f63c", "minute"))
 
     # get_instance_tcpflags_syn_flood("fab30037b2d54be484520cd16722f63c", "b18ff7c9-70cc-4781-ad31-af9845e005db")
-    print find_latest_flow("fab30037b2d54be484520cd16722f63c", "b18ff7c9-70cc-4781-ad31-af9845e005db")
+    # print find_latest_flow("fab30037b2d54be484520cd16722f63c", "b18ff7c9-70cc-4781-ad31-af9845e005db")
 
