@@ -19,3 +19,4 @@ CEILOMETER_ENDPOINT = 'http://controller:8777/v2'
 KEYSTONE_ENDPOINT01 = "http://controller:35357/v2.0/users"
 
 DB_CONN = "mongodb://flowdb:flowdb@192.168.1.180:27017/flowdb"
+ACTIVE_FLOW_URL = "http://192.168.1.180:8008/activeflows/ALL/%s/json?maxFlows=10&minValue=0&aggMode=max"

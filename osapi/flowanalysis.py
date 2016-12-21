@@ -2,9 +2,9 @@
 
 from __future__ import division
 import time
-import pymongo
 
 from mongodbconn import MongoHelper
+from settings import *
 
 
 def get_tenant_top_instance(tenant_id, curr_type):
@@ -360,14 +360,26 @@ def get_instance_tcpflags_syn_flood(tenant_id, instance_id, curr_type):
     return list(result)
 
 
+def get_instance_active_flow(instance_id):
+    """统计虚拟机最近活动流- TOP 10"""
+    url = ACTIVE_FLOW_URL % (instance_id, )
+    ret = requests.get(url)
+    if ret.status_code == 200:
+        return ret.json()
+    else:
+        return {"status": "error"}
+
+
 if __name__ == "__main__":
 
     import json
     # print json.dumps(get_tenant_top_instance("fab30037b2d54be484520cd16722f63c", "minute"))
     # print json.dumps(get_tenant_top_ip("fab30037b2d54be484520cd16722f63c", "minute"))
-    print json.dumps(get_tenant_top_protocol_port("fab30037b2d54be484520cd16722f63c", "minute"))
+    # print json.dumps(get_tenant_top_protocol_port("fab30037b2d54be484520cd16722f63c", "minute"))
 
     # print get_instance_tcpflags_syn_flood("fab30037b2d54be484520cd16722f63c", "b18ff7c9-70cc-4781-ad31-af9845e005db",
     # "minute")
     # print find_latest_flow("fab30037b2d54be484520cd16722f63c", "b18ff7c9-70cc-4781-ad31-af9845e005db")
+
+    print get_instance_active_flow("b18ff7c9-70cc-4781-ad31-af9845e005db")
 
