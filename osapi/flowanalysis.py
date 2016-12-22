@@ -208,7 +208,8 @@ def get_instance_top_protocol_port(tenant_id, instance_id, curr_type):
     result = db.flow.aggregate([{"$match": {"project_id": tenant_id,
                                             "instance_id": instance_id,
                                             "timestap": {"$gte": last_time}}},
-                                {"$group": {"_id": {"ipprotocol": "$ipprotocol", "srcport_or_icmptype": "$srcport_or_icmptype"},
+                                {"$group": {"_id": {"ipprotocol": "$ipprotocol",
+                                                    "dstport_or_icmpcode": "$dstport_or_icmpcode"},
                                             "count": {"$sum": 1}}},
                                 {"$sort": {"count": -1}},
                                 {"$limit": 10}])
@@ -375,11 +376,11 @@ if __name__ == "__main__":
     import json
     # print json.dumps(get_tenant_top_instance("fab30037b2d54be484520cd16722f63c", "minute"))
     # print json.dumps(get_tenant_top_ip("fab30037b2d54be484520cd16722f63c", "minute"))
-    # print json.dumps(get_tenant_top_protocol_port("fab30037b2d54be484520cd16722f63c", "minute"))
+    print json.dumps(get_tenant_top_session("fab30037b2d54be484520cd16722f63c", "minute"))
 
     # print get_instance_tcpflags_syn_flood("fab30037b2d54be484520cd16722f63c", "b18ff7c9-70cc-4781-ad31-af9845e005db",
     # "minute")
     # print find_latest_flow("fab30037b2d54be484520cd16722f63c", "b18ff7c9-70cc-4781-ad31-af9845e005db")
 
-    print get_instance_active_flow("b18ff7c9-70cc-4781-ad31-af9845e005db")
+    # print get_instance_active_flow("b18ff7c9-70cc-4781-ad31-af9845e005db")
 

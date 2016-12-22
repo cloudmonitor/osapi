@@ -55,7 +55,7 @@ if __name__ == "__main__":
     # print json.dumps(router_network(token_id, tenant_id))
     # print json.dumps(get_last_network_topology(token_id, tenant_id))
     # print json.dumps(get_meter_func_data(token_id, "a26d27a1-88da-485f-ab84-1f484bce78eb", "cpu_util", "minute", 1))
-    print json.dumps(get_meter_func_data(token_id, "b18ff7c9-70cc-4781-ad31-af9845e005db", "network.incoming.bytes.rate", "minute", 1))
+    print json.dumps(get_meter_func_data(token_id, "b18ff7c9-70cc-4781-ad31-af9845e005db", "disk.read.bytes.rate", "minute", 1))
     # print json.dumps(get_tenant_instances(token_id, tenant_id))
     # print json.dumps(get_server_port(token_id, tenant_id))
     # print delete_subnet(token_id, '{"subnet_ids":["d8f2be93-d772-491d-9827-d30bf20cc2d2","195030dc-9bf7-4c4d-a836-627e9ac757f6"]}')
