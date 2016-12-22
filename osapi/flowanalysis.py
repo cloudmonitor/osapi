@@ -111,7 +111,7 @@ def get_tenant_top_protocol_port(tenant_id, curr_type):
         last_time = now_time
     result = db.flow.aggregate([{"$match": {"project_id": tenant_id,
                                             "timestap": {"$gte": last_time}}},
-                                {"$group": {"_id": {"ipprotocol": "$ipprotocol", "srcport_or_icmptype": "$srcport_or_icmptype"},
+                                {"$group": {"_id": {"ipprotocol": "$ipprotocol", "dstport_or_icmpcode": "$dstport_or_icmpcode"},
                                             "count": {"$sum": 1}}},
                                 {"$sort": {"count": -1}},
                                 {"$limit": 10}])
