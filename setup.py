@@ -3,14 +3,14 @@
 from setuptools import setup, find_packages
 
 setup(
-    name = "osapi",          # 包名
-    version = "1.0",              # 版本信息
-    packages = find_packages(),  # 要打包的项目文件夹
+    name="osapi",          # 包名
+    version="1.0",              # 版本信息
+    packages=['osapi', 'osapi.sdnapi'],  # 要打包的项目文件夹
     include_package_data=True,    # 自动打包文件夹内所有数据
     zip_safe=True,                # 设定项目包为安全，不用每次都检测其安全性
 
-    install_requires = [          # 安装依赖的其他包
-    'requests',
+    install_requires=[          # 安装依赖的其他包
+        'requests',
     ],
 
     # 设置程序的入口为hello
