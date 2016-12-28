@@ -1,11 +1,11 @@
 # _*_ coding:utf-8 _*_
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name = "osapi",          # 包名
     version = "1.0",              # 版本信息
-    packages = ['osapi'],  # 要打包的项目文件夹
+    packages = find_packages(),  # 要打包的项目文件夹
     include_package_data=True,    # 自动打包文件夹内所有数据
     zip_safe=True,                # 设定项目包为安全，不用每次都检测其安全性
 
