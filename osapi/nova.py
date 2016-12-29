@@ -1,5 +1,7 @@
 # _*_ coding:utf-8 _*_
 
+import hashlib
+
 from settings import *
 from images import get_tenant_images
 from identify import get_admin_token
@@ -50,13 +52,37 @@ def get_hypervisor_instances_and_interface():
     headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
     url = NOVA_ENDPOINT.format(tenant_id=admin_tenant_id)
     all_instance_info = get_all_tenant_instances()
+    hostname = gethostname()
     for instance in all_instance_info['servers']:
-        hostname = gethostname()
         if instance['OS-EXT-SRV-ATTR:hypervisor_hostname'] == hostname:
             r = requests.get(url + '/servers/' + instance['id'] + "/os-interface", headers=headers)
             instance['interfaceAttachments'] = r.json()['interfaceAttachments']
             hypervisor_servers_list.append(instance)
     return hypervisor_servers_list
+
+
+def get_hypervisor_detail():
+    """获取hypervisor信息（超级管理员权限）"""
+    admin_token = get_admin_token()
+    admin_token_id = admin_token['access']['token']['id']
+    admin_tenant_id = admin_token['access']['token']['tenant']['id']
+    headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
+    url = NOVA_ENDPOINT.format(tenant_id=admin_tenant_id)
+    r = requests.get(url + '/os-hypervisors/detail', headers=headers)
+    return r.json()
+
+
+def get_tenant_instance_host_ip(token_id, tenant_id, instance_id):
+    """获取租户虚拟机对应的主机的IP以及端口信息（超级管理员权限）"""
+    instance = get_tenant_instance_inteface(token_id, tenant_id, instance_id)
+    host_id = instance["server"]["hostId"]
+    hypervisor_detail = get_hypervisor_detail()
+    for hypervisor in hypervisor_detail["hypervisors"]:
+        sha_hash = hashlib.sha224(tenant_id + hypervisor["hypervisor_hostname"]).hexdigest()
+        if sha_hash == host_id:
+            instance["server"]["hostIP"] = hypervisor["host_ip"]
+            break
+    return instance
 
 
 def get_tenant_instance(token_id, tenant_id, instance_id):
@@ -65,6 +91,14 @@ def get_tenant_instance(token_id, tenant_id, instance_id):
     url = NOVA_ENDPOINT.format(tenant_id=tenant_id)
     r = requests.get(url+'/servers/'+instance_id, headers=headers)
     return r.json()
+
+
+def get_tenant_instance_inteface(token_id, tenant_id, instance_id):
+    """获取某一租户下的某一vm以及接口信息"""
+    instance = get_tenant_instance(token_id, tenant_id, instance_id)
+    interface = get_server_interface(token_id, tenant_id, instance_id)
+    instance["server"]["interfaceAttachments"] = interface["interfaceAttachments"]
+    return instance
 
 
 def get_tenant_sg(token_id, tenant_id):
@@ -331,3 +365,8 @@ def get_server_console(token_id, tenant_id, servers_id, data):
     # print url
     r = requests.post(url=url, data=data, headers=headers)
     return r.json()
+
+
+if __name__ == "__main__":
+    # print json.dumps(get_hypervisor_instances_and_interface())
+    print json.dumps(get_hypervisor_detail())

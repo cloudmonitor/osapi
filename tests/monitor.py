@@ -14,6 +14,7 @@ from osapi.keypair import *
 from osapi.util import *
 from osapi.user import *
 from osapi.images import *
+# from osapi.nova import get_tenant_instance_inteface
 
 
 if __name__ == "__main__":
@@ -60,6 +61,10 @@ if __name__ == "__main__":
     # print json.dumps(get_server_port(token_id, tenant_id))
     # print delete_subnet(token_id, '{"subnet_ids":["d8f2be93-d772-491d-9827-d30bf20cc2d2","195030dc-9bf7-4c4d-a836-627e9ac757f6"]}')
     # print json.dumps(get_hypervisor_instances_and_interface())
-    import os
+    # print json.dumps(get_tenant_instance(token_id, tenant_id, "3d77c37a-a67e-43b9-a10d-f037472a5319"))
+    # print json.dumps(get_server_interface(token_id, tenant_id, "3d77c37a-a67e-43b9-a10d-f037472a5319"))
+    # print json.dumps(get_tenant_instance_inteface(token_id, tenant_id, "3d77c37a-a67e-43b9-a10d-f037472a5319"))
+    # print json.dumps(get_tenant_instance_host_ip(token_id, tenant_id, "3d77c37a-a67e-43b9-a10d-f037472a5319"))
 
-    print os.path.join(os.path.dirname(os.path.realpath(__file__)), '../..')
+
+
