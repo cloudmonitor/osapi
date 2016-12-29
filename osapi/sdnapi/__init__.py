@@ -2,4 +2,4 @@
 
 from controller import Controller
 from staticflowpusher import StaticFlowPusher
-from settings import BASE_URL
+from settings import BASE_URL, OPENFLOWDB_CONN

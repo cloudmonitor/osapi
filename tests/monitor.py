@@ -14,7 +14,10 @@ from osapi.keypair import *
 from osapi.util import *
 from osapi.user import *
 from osapi.images import *
-# from osapi.nova import get_tenant_instance_inteface
+from osapi.nova import get_tenant_instance_inteface
+from osapi.sdnapi.settings import OPENFLOWDB_CONN, BASE_URL
+from osapi.sdnapi import Controller, StaticFlowPusher
+from osapi.mongodbconn import MongoHelper
 
 
 if __name__ == "__main__":
@@ -33,7 +36,7 @@ if __name__ == "__main__":
     token_json = get_tenant_token("project01", token_id)
     token_id = token_json['access']['token']['id']
     tenant_id = token_json['access']['token']['tenant']['id']
-
+    print tenant_id
 
     # print get_tenant_used_info(token_id,tenant_id)
 
@@ -65,6 +68,7 @@ if __name__ == "__main__":
     # print json.dumps(get_server_interface(token_id, tenant_id, "3d77c37a-a67e-43b9-a10d-f037472a5319"))
     # print json.dumps(get_tenant_instance_inteface(token_id, tenant_id, "3d77c37a-a67e-43b9-a10d-f037472a5319"))
     # print json.dumps(get_tenant_instance_host_ip(token_id, tenant_id, "3d77c37a-a67e-43b9-a10d-f037472a5319"))
+
 
 
 

@@ -3,7 +3,6 @@
 import requests
 import json
 from settings import *
-
 from osapi.mongodbconn import MongoHelper
 
 
@@ -12,16 +11,17 @@ class StaticFlowPusher(object):
     def __init__(self, baseurl):
         self.baseurl = baseurl
 
-    def get_flow(self, switch, tenant_id):
+    def get_flow(self, tenant_id):
         headers = {"Content-type": "application/json", "Accept": "application/json"}
-        url = self.baseurl + "/wm/staticentrypusher/list/" + switch + "/json"
+        url = self.baseurl + "/wm/staticentrypusher/list/all/json"
         ret = requests.get(url, headers=headers)
         tenant_ofrules = []
         if ret.status_code == 200:
             all_ofrules = ret.json()
             conn = MongoHelper(OPENFLOWDB_CONN).getconn()
             db = conn["openflowdb"]
-            for ofrule in db.ofrules.find({"tenant_id": tenant_id}):
+            for ofrule in db.ofrules.find({"tenant_id": tenant_id}, {'_id': 0}):
+                print ofrule
                 for key, vals in all_ofrules.items():
                     if ofrule["flow_entry_inswitch"] == key:
                         for val in vals:
@@ -30,7 +30,7 @@ class StaticFlowPusher(object):
                                     ofrule_new = dict(ofrule, **v)
                                     tenant_ofrules.append(ofrule_new)
             conn.close()
-        return json.loads(tenant_ofrules)
+        return list(tenant_ofrules)
 
     def add_flow(self, data, tenant_id, instance_id):
         headers = {"Content-type": "application/json", "Accept": "application/json"}
@@ -82,5 +82,16 @@ flow2 = {
     "actions": "output=flood"
 }
 
-# pusher.set(flow1)
-# pusher.set(flow2)
+if __name__ == "__main__":
+    print "hello world"
+    # conn = MongoHelper(OPENFLOWDB_CONN).getconn()
+    # db = conn["openflowdb"]
+    # ofrule = {}
+    # ofrule["tenant_id"] = "fab30037b2d54be484520cd16722f63c"
+    # ofrule["flow_entry_name"] = "test01"
+    # ofrule["flow_entry_inswitch"] = "00:00:72:94:fc:09:5d:43"
+    # ofrule["instance_id"] = "3d77c37a-a67e-43b9-a10d-f037472a5319"
+    # # db.ofrules.insert(ofrule)
+    # print dict(db.ofrules.find_one())
+    # staicflowpusher = StaticFlowPusher(BASE_URL)
+    # print json.dumps(staicflowpusher.get_flow("fab30037b2d54be484520cd16722f63c"))
