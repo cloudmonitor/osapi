@@ -9,7 +9,7 @@ from settings import *
 
 def get_tenant_top_instance(tenant_id, curr_type):
     """统计最近流量中虚拟机 TOP 5"""
-    conn = MongoHelper().getconn()
+    conn = MongoHelper(FLOWDB_CONN).getconn()
     db = conn["flowdb"]
     now_time = int(time.time() * 1000)
     if curr_type == "minute":
@@ -31,7 +31,7 @@ def get_tenant_top_instance(tenant_id, curr_type):
 
 def get_tenant_top_protocol(tenant_id, curr_type):
     """统计最近流量中协议TOP 5"""
-    conn = MongoHelper().getconn()
+    conn = MongoHelper(FLOWDB_CONN).getconn()
     db = conn["flowdb"]
     now_time = int(time.time() * 1000)
     if curr_type == "minute":
@@ -53,7 +53,7 @@ def get_tenant_top_protocol(tenant_id, curr_type):
 
 def get_tenant_top_ip(tenant_id, curr_type):
     """统计最近流量中IP-TOP 10"""
-    conn = MongoHelper().getconn()
+    conn = MongoHelper(FLOWDB_CONN).getconn()
     db = conn["flowdb"]
     now_time = int(time.time() * 1000)
     if curr_type == "minute":
@@ -75,7 +75,7 @@ def get_tenant_top_ip(tenant_id, curr_type):
 
 def get_tenant_top_port(tenant_id, curr_type):
     """统计最近流量中PORT-TOP 10"""
-    conn = MongoHelper().getconn()
+    conn = MongoHelper(FLOWDB_CONN).getconn()
     db = conn["flowdb"]
     now_time = int(time.time() * 1000)
     if curr_type == "minute":
@@ -98,7 +98,7 @@ def get_tenant_top_port(tenant_id, curr_type):
 
 def get_tenant_top_protocol_port(tenant_id, curr_type):
     """统计最近流量中PORT-TOP 10"""
-    conn = MongoHelper().getconn()
+    conn = MongoHelper(FLOWDB_CONN).getconn()
     db = conn["flowdb"]
     now_time = int(time.time() * 1000)
     if curr_type == "minute":
@@ -121,7 +121,7 @@ def get_tenant_top_protocol_port(tenant_id, curr_type):
 
 def get_tenant_top_ip_link(tenant_id, curr_type):
     """统计最近流量源IP-目的IP-TOP 10"""
-    conn = MongoHelper().getconn()
+    conn = MongoHelper(FLOWDB_CONN).getconn()
     db = conn["flowdb"]
     now_time = int(time.time() * 1000)
     if curr_type == "minute":
@@ -144,7 +144,7 @@ def get_tenant_top_ip_link(tenant_id, curr_type):
 
 def get_tenant_top_session(tenant_id, curr_type):
     """统计最近流量SESSION-TOP 10"""
-    conn = MongoHelper().getconn()
+    conn = MongoHelper(FLOWDB_CONN).getconn()
     db = conn["flowdb"]
     now_time = int(time.time() * 1000)
     if curr_type == "minute":
@@ -170,7 +170,7 @@ def get_tenant_top_session(tenant_id, curr_type):
 
 def get_instance_top_ip_link(tenant_id, instance_id, curr_type):
     """统计最近流量源IP-目的IP-TOP 10"""
-    conn = MongoHelper().getconn()
+    conn = MongoHelper(FLOWDB_CONN).getconn()
     db = conn["flowdb"]
     now_time = int(time.time() * 1000)
     if curr_type == "minute":
@@ -194,7 +194,7 @@ def get_instance_top_ip_link(tenant_id, instance_id, curr_type):
 
 def get_instance_top_protocol_port(tenant_id, instance_id, curr_type):
     """统计最近流量中PORT-TOP 10"""
-    conn = MongoHelper().getconn()
+    conn = MongoHelper(FLOWDB_CONN).getconn()
     db = conn["flowdb"]
     now_time = int(time.time() * 1000)
     if curr_type == "minute":
@@ -219,7 +219,7 @@ def get_instance_top_protocol_port(tenant_id, instance_id, curr_type):
 
 def get_instance_top_session(tenant_id, instance_id, curr_type):
     """统计最近流量SESSION-TOP 10"""
-    conn = MongoHelper().getconn()
+    conn = MongoHelper(FLOWDB_CONN).getconn()
     db = conn["flowdb"]
     now_time = int(time.time() * 1000)
     if curr_type == "minute":
@@ -246,7 +246,7 @@ def get_instance_top_session(tenant_id, instance_id, curr_type):
 
 def get_instance_top_src_ip(tenant_id, instance_id, curr_type):
     """统计虚拟机源IP--TOP 10"""
-    conn = MongoHelper().getconn()
+    conn = MongoHelper(FLOWDB_CONN).getconn()
     db = conn["flowdb"]
     now_time = int(time.time() * 1000)
     if curr_type == "minute":
@@ -270,7 +270,7 @@ def get_instance_top_src_ip(tenant_id, instance_id, curr_type):
 
 def get_instance_top_dst_ip(tenant_id, instance_id, curr_type):
     """统计虚拟机目的IP--TOP 10"""
-    conn = MongoHelper().getconn()
+    conn = MongoHelper(FLOWDB_CONN).getconn()
     db = conn["flowdb"]
     now_time = int(time.time() * 1000)
     if curr_type == "minute":
@@ -294,7 +294,7 @@ def get_instance_top_dst_ip(tenant_id, instance_id, curr_type):
 
 def get_instance_top_src_port(tenant_id, instance_id, curr_type):
     """统计虚拟机源PORT--TOP 10"""
-    conn = MongoHelper().getconn()
+    conn = MongoHelper(FLOWDB_CONN).getconn()
     db = conn["flowdb"]
     now_time = int(time.time() * 1000)
     if curr_type == "minute":
@@ -318,7 +318,7 @@ def get_instance_top_src_port(tenant_id, instance_id, curr_type):
 
 def get_instance_top_dst_port(tenant_id, instance_id, curr_type):
     """统计虚拟机目的PORT--TOP 10"""
-    conn = MongoHelper().getconn()
+    conn = MongoHelper(FLOWDB_CONN).getconn()
     db = conn["flowdb"]
     now_time = int(time.time() * 1000)
     if curr_type == "minute":
@@ -341,7 +341,7 @@ def get_instance_top_dst_port(tenant_id, instance_id, curr_type):
 
 
 def get_instance_tcpflags_syn_flood(tenant_id, instance_id, curr_type):
-    conn = MongoHelper().getconn()
+    conn = MongoHelper(FLOWDB_CONN).getconn()
     db = conn["flowdb"]
     now_time = int(time.time() * 1000)
     if curr_type == "minute":
