@@ -31,7 +31,7 @@ class StaticFlowPusher(object):
             conn.close()
         return tenant_ofrules
 
-    def add_flow(self, data, tenant_id, instance_id):
+    def add_flow(self, data, tenant_id, instance_id, instance_name):
         headers = {"Content-type": "application/json", "Accept": "application/json"}
         url = self.baseurl + "/wm/staticentrypusher/json"
         ret = requests.post(url, data=data, headers=headers)
@@ -42,6 +42,7 @@ class StaticFlowPusher(object):
             ofrule["flow_entry_name"] = flow_entry["name"]
             ofrule["flow_entry_inswitch"] = flow_entry["switch"]
             ofrule["instance_id"] = instance_id
+            ofrule["instance_name"] = instance_name
             conn = MongoHelper(OPENFLOWDB_CONN).getconn()
             db = conn["openflowdb"]
             ofrule_one = db.ofrules.find_one({"flow_entry_name": flow_entry["name"]})
@@ -49,7 +50,8 @@ class StaticFlowPusher(object):
                 db.ofrules.update({"flow_entry_name": flow_entry["name"]},
                                   {"$set": {"tenant_id": tenant_id,
                                             "flow_entry_inswitch": flow_entry["switch"],
-                                            "instance_id": instance_id}})
+                                            "instance_id": instance_id,
+                                            "instance_name": instance_name}})
             else:
                 db.ofrules.insert(ofrule)
             conn.close()
