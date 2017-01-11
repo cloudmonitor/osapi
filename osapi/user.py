@@ -7,14 +7,14 @@ from identify import get_admin_token
 def get_users_list(admin_token_id):
     """获取用户列表"""
     headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
-    r = requests.get(url=KEYSTONE_ENDPOINT01, headers=headers)
+    r = requests.get(url=KEYSTONE_ENDPOINT_ADMIN_USERS, headers=headers)
     return r.json()
 
 
 def get_users_detail(admin_token_id, user_id):
     """获取用户详情"""
     headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
-    url = KEYSTONE_ENDPOINT01 + '/'+user_id
+    url = KEYSTONE_ENDPOINT_ADMIN_USERS + '/' + user_id
     r = requests.get(url=url, headers=headers)
     return r.json()
 
@@ -24,7 +24,7 @@ def update_user(user_id, user_data):
     """更新用户，包括用户名、密码、是否激活"""
     admin_token_id = get_admin_token()['access']['token']['id']
     headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
-    url = KEYSTONE_ENDPOINT01 + '/' + user_id
+    url = KEYSTONE_ENDPOINT_ADMIN_USERS + '/' + user_id
     r = requests.put(url=url, data=json.dumps(user_data), headers=headers)
     return r.json()
 
@@ -34,7 +34,7 @@ def create_user(user_data):
     """创建用户"""
     admin_token_id = get_admin_token()
     headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
-    url = KEYSTONE_ENDPOINT01
+    url = KEYSTONE_ENDPOINT_ADMIN_USERS
     r = requests.put(url=url, data=user_data, headers=headers)
     return r.json()
 
@@ -44,7 +44,7 @@ def delete_user(user_id):
     """删除用户"""
     admin_token_id = get_admin_token()
     headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
-    url = KEYSTONE_ENDPOINT01 + '/' + user_id
+    url = KEYSTONE_ENDPOINT_ADMIN_USERS + '/' + user_id
     r = requests.delete(url=url, headers=headers)
     return r.status_code()
 
@@ -55,7 +55,7 @@ def delete_user(user_id):
 #     if auth_is_available(token):
 #         admin_token_id = get_admin_token()['access']['token']['id']
 #         headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
-#         url = KEYSTONE_ENDPOINT01 + '/' + user_id
+#         url = KEYSTONE_ENDPOINT_ADMIN_USERS + '/' + user_id
 #         r = requests.put(url=url, data=json.dumps(user_data), headers=headers)
 #         return r.json()
 #     else:
@@ -67,7 +67,7 @@ def delete_user(user_id):
 #     if auth_is_available(token):
 #         admin_token_id = get_admin_token()
 #         headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
-#         url = KEYSTONE_ENDPOINT01
+#         url = KEYSTONE_ENDPOINT_ADMIN_USERS
 #         print url
 #         r = requests.put(url=url, data=user_data, headers=headers)
 #         return r.json()
@@ -80,7 +80,7 @@ def delete_user(user_id):
 #     if auth_is_available(token):
 #         admin_token_id = get_admin_token()
 #         headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
-#         url = KEYSTONE_ENDPOINT01 + '/' + user_id
+#         url = KEYSTONE_ENDPOINT_ADMIN_USERS + '/' + user_id
 #         print url
 #         r = requests.delete(url=url, headers=headers)
 #         return r.status_code()
