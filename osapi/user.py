@@ -22,7 +22,7 @@ def get_users_detail(admin_token_id, user_id):
 @auth_is_available
 def update_user(user_id, user_data):
     """更新用户，包括用户名、密码、是否激活"""
-    admin_token_id = get_admin_token()['access']['token']['id']
+    admin_token_id = get_admin_token("admin", "admin")['access']['token']['id']
     headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
     url = KEYSTONE_ENDPOINT_ADMIN_USERS + '/' + user_id
     r = requests.put(url=url, data=json.dumps(user_data), headers=headers)
@@ -32,7 +32,7 @@ def update_user(user_id, user_data):
 @auth_is_available
 def create_user(user_data):
     """创建用户"""
-    admin_token_id = get_admin_token()
+    admin_token_id = get_admin_token("admin", "admin")
     headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
     url = KEYSTONE_ENDPOINT_ADMIN_USERS
     r = requests.put(url=url, data=user_data, headers=headers)
@@ -42,7 +42,7 @@ def create_user(user_data):
 @auth_is_available
 def delete_user(user_id):
     """删除用户"""
-    admin_token_id = get_admin_token()
+    admin_token_id = get_admin_token("admin", "admin")
     headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
     url = KEYSTONE_ENDPOINT_ADMIN_USERS + '/' + user_id
     r = requests.delete(url=url, headers=headers)
@@ -53,7 +53,7 @@ def delete_user(user_id):
 # def update_user(token, user_id, user_data):
 #     """更新用户，包括用户名、密码、是否激活"""
 #     if auth_is_available(token):
-#         admin_token_id = get_admin_token()['access']['token']['id']
+#         admin_token_id = get_admin_token("admin", "admin")['access']['token']['id']
 #         headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
 #         url = KEYSTONE_ENDPOINT_ADMIN_USERS + '/' + user_id
 #         r = requests.put(url=url, data=json.dumps(user_data), headers=headers)
@@ -65,7 +65,7 @@ def delete_user(user_id):
 # def create_user(token, user_data):
 #     """创建用户"""
 #     if auth_is_available(token):
-#         admin_token_id = get_admin_token()
+#         admin_token_id = get_admin_token("admin", "admin")
 #         headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
 #         url = KEYSTONE_ENDPOINT_ADMIN_USERS
 #         print url
@@ -78,7 +78,7 @@ def delete_user(user_id):
 # def delete_user(token, user_id):
 #     """删除用户"""
 #     if auth_is_available(token):
-#         admin_token_id = get_admin_token()
+#         admin_token_id = get_admin_token("admin", "admin")
 #         headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
 #         url = KEYSTONE_ENDPOINT_ADMIN_USERS + '/' + user_id
 #         print url

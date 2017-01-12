@@ -39,7 +39,7 @@ def _get_tenant_securitygroups_rules_used(token_id):
 def _get_compute_quota(tenant_id):
     """根据租户id获取计算方面的配额"""
     compute_quota = {}
-    admin_token = get_admin_token()
+    admin_token = get_admin_token("admin", "admin")
     admin_token_id = admin_token['access']['token']['id']
     admin_tenant_id = admin_token['access']['token']['tenant']['id']
     headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
@@ -54,7 +54,7 @@ def _get_compute_quota(tenant_id):
 
 def _get_network_quota(tenant_id):
     """根据获取所有网络方面的配额"""
-    admin_token_id = get_admin_token()['access']['token']['id']
+    admin_token_id = get_admin_token("admin", "admin")['access']['token']['id']
     headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
     url = NEUTRON_ENDPOINT+'/quotas/' + tenant_id
     r = requests.get(url, headers=headers)

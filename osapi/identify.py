@@ -13,9 +13,9 @@ def get_user_token(username, password):
     return r.json()
 
 
-def get_admin_token():
+def get_admin_token(username, password):
     """"获取admin的token"""
-    credential = CREDENTIAL_PASSWORD % ('admin', 'admin', 'admin')
+    credential = CREDENTIAL_PASSWORD % ('admin', username, password)
     headers = {"Content-type": "application/json", "Accept": "application/json"}
     r = requests.post(KEYSTONE_ENDPOINT+'/tokens', data=credential, headers=headers)
     return r.json()

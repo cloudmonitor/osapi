@@ -34,7 +34,7 @@ def get_tenant_instances(token_id, tenant_id):
 
 def get_all_tenant_instances():
     """获取所有租户下所有的VM（超级管理员权限）"""
-    admin_token = get_admin_token()
+    admin_token = get_admin_token("admin", "admin")
     admin_token_id = admin_token['access']['token']['id']
     admin_tenant_id = admin_token['access']['token']['tenant']['id']
     headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
@@ -45,7 +45,7 @@ def get_all_tenant_instances():
 
 def get_hypervisor_instances_and_interface():
     """获取计算节点上所有的VM以及相应接口信息（超级管理员权限）"""
-    admin_token = get_admin_token()
+    admin_token = get_admin_token("admin", "admin")
     admin_token_id = admin_token['access']['token']['id']
     admin_tenant_id = admin_token['access']['token']['tenant']['id']
     hypervisor_servers_list = []
@@ -63,7 +63,7 @@ def get_hypervisor_instances_and_interface():
 
 def get_hypervisor_detail():
     """获取hypervisor信息（超级管理员权限）"""
-    admin_token = get_admin_token()
+    admin_token = get_admin_token("admin", "admin")
     admin_token_id = admin_token['access']['token']['id']
     admin_tenant_id = admin_token['access']['token']['tenant']['id']
     headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
