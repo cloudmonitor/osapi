@@ -14,6 +14,8 @@ from osapi.keypair import *
 from osapi.util import *
 from osapi.user import *
 from osapi.images import *
+from osapi.admin.abstract import *
+from osapi.admin.physical_host import *
 from osapi.nova import get_tenant_instance_inteface
 from osapi.sdnapi.settings import OPENFLOWDB_CONN, BASE_URL
 from osapi.sdnapi import Controller, StaticFlowPusher
@@ -24,19 +26,22 @@ if __name__ == "__main__":
 
     # 通过用户和密码获取token
     token_json = get_user_token("user01", "user01")
-    admin_json = get_admin_token()
+    admin_json = get_admin_token("admin", "admin")
     token = token_json['access']['token']
     token_id = token_json['access']['token']['id']
     admin_token_id = admin_json['access']['token']['id']
+    admin_tenant_id = admin_json['access']['token']['tenant']['id']
+    # print admin_tenant_id
+    # print admin_token_id
     # 获取租户
     # print get_tenants(token_id)
     # tenant_name = get_tenants(token_id)['tenants'][0]['name']
     tenant_id = get_tenants(token_id)['tenants'][0]['id']
     # 获取租户的token
-    token_json = get_tenant_token("project01", token_id)
-    token_id = token_json['access']['token']['id']
-    tenant_id = token_json['access']['token']['tenant']['id']
-    print tenant_id
+    # token_json = get_tenant_token("project01", token_id)
+    # token_id = token_json['access']['token']['id']
+    # tenant_id = token_json['access']['token']['tenant']['id']
+    # print tenant_id
 
     # print get_tenant_used_info(token_id,tenant_id)
 
@@ -58,7 +63,7 @@ if __name__ == "__main__":
     # print json.dumps(get_server_console(token_id, tenant_id, "664a8a84-d9b4-43fe-ba23-31b561e35907", '{"os-getVNCConsole": {"type": "novnc"}}'))
     # print json.dumps(router_network(token_id, tenant_id))
     # print json.dumps(get_last_network_topology(token_id, tenant_id))
-    # print json.dumps(get_meter_func_data(token_id, "a26d27a1-88da-485f-ab84-1f484bce78eb", "cpu_util", "minute", 1))
+    # print json.dumps(get_meter_func_data(token_id, "fab30037b2d54be484520cd16722f63c", "cpu_util", "minute", 1))
     # print json.dumps(get_meter_func_data(token_id, "b18ff7c9-70cc-4781-ad31-af9845e005db", "disk.read.bytes.rate", "minute", 1))
     # print json.dumps(get_tenant_instances(token_id, tenant_id))
     # print json.dumps(get_server_port(token_id, tenant_id))
@@ -68,7 +73,7 @@ if __name__ == "__main__":
     # print json.dumps(get_server_interface(token_id, tenant_id, "3d77c37a-a67e-43b9-a10d-f037472a5319"))
     # print json.dumps(get_tenant_instance_inteface(token_id, tenant_id, "3d77c37a-a67e-43b9-a10d-f037472a5319"))
     # print json.dumps(get_tenant_instance_host_ip(token_id, tenant_id, "3d77c37a-a67e-43b9-a10d-f037472a5319"))
-
-
-
+    # print json.dumps(get_tenant_usage(admin_token_id, "2017-01-12 07:00:00.000000", "2017-01-12 08:00:00.000000", admin_tenant_id))
+    print json.dumps(get_physical_usage(admin_token_id, admin_tenant_id))
+    # print json.dumps(get_statistics_info(admin_token_id, admin_tenant_id))
 
