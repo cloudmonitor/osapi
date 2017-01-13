@@ -73,7 +73,6 @@ def get_one_meter(token_id, local_time, meter_name, resource_id):
             url_list.append(key+'='+str(value)+'&')
     url_list.append("limit=1")
     url = ''.join(url_list)
-    print url
     r = requests.get(url, headers=headers)
     return r.json()
 
@@ -151,5 +150,3 @@ def get_list_meter_day(token_id, meter_name, resource_id):
         localtime = datetime.datetime.strftime(times, "%Y-%m-%d %H:%M:%S")
     data = {meter_name: meter_info_list}
     return data
-
-

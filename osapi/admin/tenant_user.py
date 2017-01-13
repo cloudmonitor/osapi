@@ -1,7 +1,7 @@
 # _*_ coding:utf-8 _*_
 
 from osapi.settings import *
-KEYSTONE_ENDPOINT_ADMIN = "http://controller:35357/v2.0"
+
 
 def get_all_tenants(token_id):
     """获得所有的租户信息，并进行过滤掉service项目"""
@@ -27,11 +27,11 @@ def create_tenant(token_id, data):
 
 
 def delete_tenant(token_id, tenant_id):
-    """删除指定ID的租户"""
+    """删除指定ID的租户，删除成功返回204"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = KEYSTONE_ENDPOINT_ADMIN + "/tenants/" + tenant_id
     r = requests.delete(url=url, headers=headers)
-    return r.json()
+    return r.status_code
 
 
 def update_tenant(token_id, tenant_id, data):
@@ -78,8 +78,25 @@ def get_all_users(token_id):
 
 
 def create_user(token_id, data):
+    """创建用户"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = KEYSTONE_ENDPOINT_ADMIN + "/users"
+    r = requests.post(url=url, data=data, headers=headers)
+    return r.json()
+
+
+def delete_user(token_id, user_id):
+    """删除用户，删除成功返回204"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = KEYSTONE_ENDPOINT_ADMIN + "/users/" + user_id
+    r = requests.delete(url=url, headers=headers)
+    return r.status_code
+
+
+def update_user(token_id, user_id, data):
+    """删除用户，删除成功返回204"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = KEYSTONE_ENDPOINT_ADMIN + "/users/" + user_id
     r = requests.post(url=url, data=data, headers=headers)
     return r.json()
 
@@ -92,7 +109,16 @@ if __name__ == "__main__":
             "enabled": True
         }
     }
+    user = {
+        "user": {
+            "email": "new-user@example.com",
+            "password": None,
+            "enabled": True,
+            "name": "new-user"
+        }
+    }
 
     # print json.dumps(get_all_tenants("0b64851e26ed43c4a6f168c59c511d1d"))
     # print json.dumps(get_all_users("0b64851e26ed43c4a6f168c59c511d1d"))
-    print json.dumps(create_tenant("a7b64185cf59465ab0524b66f95a9587", json.dumps(tenant)))
+    # print json.dumps(create_tenant("a7b64185cf59465ab0524b66f95a9587", json.dumps(tenant)))
+    # print json.dumps(create_user("e877e05d418d48acba0483e355e16a50", json.dumps(user)))
