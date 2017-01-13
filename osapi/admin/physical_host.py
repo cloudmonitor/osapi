@@ -22,13 +22,18 @@ def get_physical_usage(token_id, tenant_id):
         physical_tmp["hypervisor_hostname"] = physical_info["hypervisors"][i]["hypervisor_hostname"]
         physical_tmp["memory_mb"] = physical_info["hypervisors"][i]["memory_mb"]
         physical_tmp["local_gb"] = physical_info["hypervisors"][i]["local_gb"]
+        physical_tmp["hypervisor_type"] = physical_info["hypervisors"][i]["hypervisor_type"]
+        physical_tmp["running_vms"] = physical_info["hypervisors"][i]["running_vms"]
+        physical_tmp["id"] = physical_info["hypervisors"][i]["id"]
         hypervisors_usage["hypervisors"].append(physical_tmp)
     return hypervisors_usage
 
 
-def get_statistics_info(token_id, tenant_id):
-    """获取云平台下总的统计信息（未分节点）"""
+def get_hypervisor_info(token_id, tenant_id, hypervisor_id):
+    """某个hypervisor下的所有虚拟机的名称和ID"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NOVA_ENDPOINT.format(tenant_id=tenant_id)
-    r = requests.get(url=url + "/os-hypervisors/statistics", headers=headers)
+    r = requests.get(url=url + "/os-hypervisors/" + hypervisor_id + "/servers", headers=headers)
     return r.json()
+
+
