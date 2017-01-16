@@ -42,17 +42,50 @@ def update_tenant(token_id, tenant_id, data):
     return r.json()
 
 
-def update_tenant_quota(token_id, admin_tenant_id, tenant_id, data):
-    """更新租户信息"""
+def get_tenant_quota(token_id, admin_tenant_id, tenant_id):
+    """获取租户配额信息"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
-    url = NOVA_ENDPOINT + "/" + admin_tenant_id + "/os-quota-sets/" + tenant_id
+    url = NOVA_ENDPOINT.format(tenant_id=admin_tenant_id) + "/os-quota-sets/" + tenant_id
+    r = requests.get(url=url, headers=headers)
+    return r.json()
+
+
+def update_tenant_quota(token_id, admin_tenant_id, tenant_id, data):
+    """更新租户配额信息"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NOVA_ENDPOINT.format(tenant_id=admin_tenant_id) + "/os-quota-sets/" + tenant_id
     r = requests.post(url=url, data=data, headers=headers)
     return r.json()
 
 
+def get_tenant_neutron_quota(token_id, tenant_id):
+    """获取租户网络相关配额信息"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT + "/quotas/" + tenant_id
+    r = requests.get(url=url, headers=headers)
+    return r.json()
+
+
+def update_tenant_neutron_quota(token_id, tenant_id, data):
+    """更新租户网络相关配额信息"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT + "/quotas/" + tenant_id
+    r = requests.put(url=url, data=data, headers=headers)
+    return r.json()
+
+
 def get_tenant_users(token_id, tenant_id):
+    """获取租户的用户"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = KEYSTONE_ENDPOINT_ADMIN + "/tenants/" + tenant_id + "/users"
+    r = requests.get(url=url, headers=headers)
+    return r.json()
+
+
+def get_tenant_user_role(token_id, tenant_id, user_id):
+    """获取租户用户的角色"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = KEYSTONE_ENDPOINT_ADMIN + "/tenants/" + tenant_id + "/users/" + user_id + "/roles"
     r = requests.get(url=url, headers=headers)
     return r.json()
 
@@ -104,7 +137,7 @@ def update_user(token_id, user_id, data):
 if __name__ == "__main__":
     tenant = {
         "tenant": {
-            "name": "test",
+            "name": "test02",
             "description": "A description ...",
             "enabled": True
         }
@@ -118,7 +151,23 @@ if __name__ == "__main__":
         }
     }
 
-    # print json.dumps(get_all_tenants("0b64851e26ed43c4a6f168c59c511d1d"))
+    quota = {
+      "quota": {
+        "subnet": 10,
+        "network": 10,
+        "floatingip": 50,
+        "security_group_rule": 100,
+        "security_group": 10,
+        "router": 10,
+        "port": 50
+      }
+    }
+    # print json.dumps(get_all_tenants("e877e05d418d48acba0483e355e16a50"))
     # print json.dumps(get_all_users("0b64851e26ed43c4a6f168c59c511d1d"))
-    # print json.dumps(create_tenant("a7b64185cf59465ab0524b66f95a9587", json.dumps(tenant)))
+    # print json.dumps(create_tenant("e90c0fdf0c364474b9c375a2e5a4e67d", json.dumps(tenant)))
+    # print json.dumps(update_tenant("e90c0fdf0c364474b9c375a2e5a4e67d", "676d2619d151466e9d1da24b37a61e74", json.dumps(tenant)))
     # print json.dumps(create_user("e877e05d418d48acba0483e355e16a50", json.dumps(user)))
+    print json.dumps(get_tenant_quota("5b35a6ff837a460a9b83577b020982c6", "5d03fc15631048d19bedaf1f911568e8", "676d2619d151466e9d1da24b37a61e74"))
+    print json.dumps(get_tenant_neutron_quota("5b35a6ff837a460a9b83577b020982c6", "676d2619d151466e9d1da24b37a61e74"))
+
+
