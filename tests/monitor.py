@@ -73,7 +73,11 @@ if __name__ == "__main__":
     # print json.dumps(get_server_interface(token_id, tenant_id, "3d77c37a-a67e-43b9-a10d-f037472a5319"))
     # print json.dumps(get_tenant_instance_inteface(token_id, tenant_id, "3d77c37a-a67e-43b9-a10d-f037472a5319"))
     # print json.dumps(get_tenant_instance_host_ip(token_id, tenant_id, "3d77c37a-a67e-43b9-a10d-f037472a5319"))
-    # print json.dumps(get_tenant_usage(admin_token_id, "2017-01-12 07:00:00.000000", "2017-01-12 08:00:00.000000", admin_tenant_id))
-    print json.dumps(get_physical_usage(admin_token_id, admin_tenant_id))
+    print json.dumps(get_abstarct_info(admin_token_id, "2017-01-12 07:00:00.000000", "2017-01-12 08:00:00.000000", admin_tenant_id))
+    # print json.dumps(get_physical_usage(admin_token_id, admin_tenant_id))
     # print json.dumps(get_statistics_info(admin_token_id, admin_tenant_id))
+    # print json.dumps(get_hypervisor_info(admin_token_id, admin_tenant_id, "1"))
+    # print json.dumps(get_users_list(admin_token_id))
+    # print json.dumps(get_all_tenant_instances())
+    # print json.dumps(get_num_info(admin_token_id))
 
