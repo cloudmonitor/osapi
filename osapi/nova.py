@@ -6,6 +6,8 @@ from settings import *
 from images import get_tenant_images
 from identify import get_admin_token
 from osapi.admin import get_hypervisor_detail
+from images import get_image_name
+from flavors import get_flavor_name
 
 
 def get_tenant_instances(token_id, tenant_id):
@@ -16,16 +18,14 @@ def get_tenant_instances(token_id, tenant_id):
     return r.json()
 
 
-def get_tenant_instances_image(token_id, tenant_id):
+def get_tenant_instances_image_flavor(token_id, tenant_id):
     """获取某一租户下的所有vm,并将镜像的名字加入到了虚拟机的内容中"""
     instances_info = get_tenant_instances(token_id, tenant_id)
-    images_info = get_tenant_images(token_id)
     for i in range(len(instances_info['servers'])):
-        image_id = instances_info['servers'][i]['image']['id']
-        for j in range(len(images_info['images'])):
-            if image_id == images_info['images'][j]['id']:
-                instances_info['servers'][i]['image']['image_name'] = images_info['images'][j]['name']
-                break
+        image_name = get_image_name(token_id, instances_info['servers'][i]['image']['id'])
+        instances_info['servers'][i]['image']['image_name'] = image_name
+        flavor_name = get_flavor_name(token_id, tenant_id, instances_info['servers'][i]['flavor']['id'])
+        instances_info['servers'][i]['flavor']['flavor_name'] = flavor_name
     return instances_info
 
 
