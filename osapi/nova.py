@@ -5,23 +5,7 @@ import hashlib
 from settings import *
 from images import get_tenant_images
 from identify import get_admin_token
-from gethostname import gethostname
-
-
-def get_tenant_instances_image(token_id, tenant_id):
-    """获取某一租户下的所有vm,并将镜像的名字加入到了虚拟机的内容中"""
-    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
-    url = NOVA_ENDPOINT.format(tenant_id=tenant_id)
-    r = requests.get(url+'/servers/detail', headers=headers)
-    instances_info = r.json()
-    images_info = get_tenant_images(token_id)
-    for i in range(len(instances_info['servers'])):
-        image_id = instances_info['servers'][i]['image']['id']
-        for j in range(len(images_info['images'])):
-            if image_id == images_info['images'][j]['id']:
-                instances_info['servers'][i]['image']['image_name'] = images_info['images'][j]['name']
-                break
-    return instances_info
+from osapi.admin import get_hypervisor_detail
 
 
 def get_tenant_instances(token_id, tenant_id):
@@ -32,51 +16,27 @@ def get_tenant_instances(token_id, tenant_id):
     return r.json()
 
 
-def get_all_tenant_instances():
-    """获取所有租户下所有的VM（超级管理员权限）"""
-    admin_token = get_admin_token("admin", "admin")
-    admin_token_id = admin_token['access']['token']['id']
-    admin_tenant_id = admin_token['access']['token']['tenant']['id']
-    headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
-    url = NOVA_ENDPOINT.format(tenant_id=admin_tenant_id)
-    r = requests.get(url+'/servers/detail?all_tenants=1', headers=headers)
-    return r.json()
-
-
-def get_hypervisor_instances_and_interface():
-    """获取计算节点上所有的VM以及相应接口信息（超级管理员权限）"""
-    admin_token = get_admin_token("admin", "admin")
-    admin_token_id = admin_token['access']['token']['id']
-    admin_tenant_id = admin_token['access']['token']['tenant']['id']
-    hypervisor_servers_list = []
-    headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
-    url = NOVA_ENDPOINT.format(tenant_id=admin_tenant_id)
-    all_instance_info = get_all_tenant_instances()
-    hostname = gethostname()
-    for instance in all_instance_info['servers']:
-        if instance['OS-EXT-SRV-ATTR:hypervisor_hostname'] == hostname:
-            r = requests.get(url + '/servers/' + instance['id'] + "/os-interface", headers=headers)
-            instance['interfaceAttachments'] = r.json()['interfaceAttachments']
-            hypervisor_servers_list.append(instance)
-    return hypervisor_servers_list
-
-
-def get_hypervisor_detail():
-    """获取hypervisor信息（超级管理员权限）"""
-    admin_token = get_admin_token("admin", "admin")
-    admin_token_id = admin_token['access']['token']['id']
-    admin_tenant_id = admin_token['access']['token']['tenant']['id']
-    headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
-    url = NOVA_ENDPOINT.format(tenant_id=admin_tenant_id)
-    r = requests.get(url + '/os-hypervisors/detail', headers=headers)
-    return r.json()
+def get_tenant_instances_image(token_id, tenant_id):
+    """获取某一租户下的所有vm,并将镜像的名字加入到了虚拟机的内容中"""
+    instances_info = get_tenant_instances(token_id, tenant_id)
+    images_info = get_tenant_images(token_id)
+    for i in range(len(instances_info['servers'])):
+        image_id = instances_info['servers'][i]['image']['id']
+        for j in range(len(images_info['images'])):
+            if image_id == images_info['images'][j]['id']:
+                instances_info['servers'][i]['image']['image_name'] = images_info['images'][j]['name']
+                break
+    return instances_info
 
 
 def get_tenant_instance_host_ip(token_id, tenant_id, instance_id):
     """获取租户虚拟机对应的主机的IP以及端口信息（超级管理员权限）"""
     instance = get_tenant_instance_inteface(token_id, tenant_id, instance_id)
     host_id = instance["server"]["hostId"]
-    hypervisor_detail = get_hypervisor_detail()
+    admin_token = get_admin_token("admin", "admin")
+    admin_token_id = admin_token['access']['token']['id']
+    admin_tenant_id = admin_token['access']['token']['tenant']['id']
+    hypervisor_detail = get_hypervisor_detail(admin_token_id, admin_tenant_id)
     for hypervisor in hypervisor_detail["hypervisors"]:
         sha_hash = hashlib.sha224(tenant_id + hypervisor["hypervisor_hostname"]).hexdigest()
         if sha_hash == host_id:

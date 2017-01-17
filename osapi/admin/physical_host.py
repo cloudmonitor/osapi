@@ -37,3 +37,11 @@ def get_hypervisor_info(token_id, tenant_id, hypervisor_id):
     return r.json()
 
 
+def get_hypervisor_detail(token_id, admin_tenant_id):
+    """获取hypervisor信息（超级管理员权限）"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NOVA_ENDPOINT.format(tenant_id=admin_tenant_id)
+    r = requests.get(url + '/os-hypervisors/detail', headers=headers)
+    return r.json()
+
+
