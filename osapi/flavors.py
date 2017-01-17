@@ -8,7 +8,7 @@ def get_tenant_flavors(token_id, tenant_id):
     """获取租户的类型"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NOVA_ENDPOINT.format(tenant_id=tenant_id)
-    r = requests.get(url+'/flavors', headers=headers)
+    r = requests.get(url+'/flavors/detail', headers=headers)
     return r.json()
 
 

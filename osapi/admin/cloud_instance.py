@@ -4,6 +4,7 @@ from osapi.settings import *
 
 from osapi.flavors import get_flavor_name
 from osapi.images import get_image_name
+from tenant_user import get_all_tenants
 
 
 def get_all_tenant_instances(token_id, admin_tenant_id):
@@ -19,7 +20,19 @@ def get_all_tenant_instances(token_id, admin_tenant_id):
         instances_info['servers'][i]["flavor"]["flavor_name"] = flavor_name
         image_name = get_image_name(token_id, instances_info['servers'][i]["image"]["id"])
         instances_info['servers'][i]['image']['image_name'] = image_name
+        tenant_name = _get_instance_tenant_name(token_id, instances_info['servers'][i]["tenant_id"])
+        instances_info['servers'][i]["tenant_name"] = tenant_name
     return instances_info
+
+
+def _get_instance_tenant_name(token_id, instance_tenant_id):
+    tenants = get_all_tenants(token_id)
+    tenant_name = "unknown"
+    for tenant in tenants["tenants"]:
+        if instance_tenant_id == tenant["id"]:
+            tenant_name = tenant["name"]
+            break
+    return tenant_name
 
 
 def get_hypervisor_instances(token_id, admin_tenant_id, hypervisor_name):
@@ -38,4 +51,4 @@ if __name__ == "__main__":
     admin_token_id = admin_token['access']['token']['id']
     admin_tenant_id = admin_token['access']['token']['tenant']['id']
     print json.dumps(get_all_tenant_instances(admin_token_id, admin_tenant_id))
-    print json.dumps(get_hypervisor_instances(admin_token_id, admin_tenant_id, "compute01"))
+    # print json.dumps(get_hypervisor_instances(admin_token_id, admin_tenant_id, "compute01"))
