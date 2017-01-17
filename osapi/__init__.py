@@ -15,4 +15,5 @@ from util import *
 from user import *
 from images import *
 from flowanalysis import *
+from flavors import *
 import osapi.sdnapi

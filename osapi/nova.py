@@ -69,14 +69,6 @@ def get_tenant_sg(token_id, tenant_id):
     return r.json()
 
 
-def get_tenant_flavors(token_id, tenant_id):
-    """获取租户的类型"""
-    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
-    url = NOVA_ENDPOINT.format(tenant_id=tenant_id)
-    r = requests.get(url+'/flavors/detail', headers=headers)
-    return r.json()
-
-
 def get_tenant_os_availability_zone(token_id,tenant_id):
     """获取可分配的域"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
@@ -312,9 +304,7 @@ def action_server(token_id, tenant_id, servers_id, data):
     锁定和解锁虚拟机、硬重启、软重启、关闭虚拟机、重建虚拟机、启动虚拟机"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NOVA_ENDPOINT.format(tenant_id=tenant_id) + "/servers/" + servers_id + "/action"
-    # print url
     r = requests.post(url=url, data=data, headers=headers)
-    # print r.status_code
     return r.json()
 
 
@@ -322,7 +312,6 @@ def get_server_console(token_id, tenant_id, servers_id, data):
     """获取虚拟机远程登录"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NOVA_ENDPOINT.format(tenant_id=tenant_id) + "/servers/" + servers_id + "/action"
-    # print url
     r = requests.post(url=url, data=data, headers=headers)
     return r.json()
 
