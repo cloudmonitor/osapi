@@ -34,6 +34,16 @@ def delete_tenant(token_id, tenant_id):
     return r.status_code
 
 
+def delete_tanant_list(token_id, tenant_id_list):
+    """删除一个列表中的项目，{"tenant_id":[,]}"""
+    status_code_list = {}  # 用于存储返回值
+    status["status_code"] = []
+    for i in range(len(tenant_id_list["tenant_id"])):
+        status_code = delete_tenant(token_id, tenant_id_list["tenant_id"][i])
+        status_code_list["status_code"].append(status_code)
+    return status_code_list
+
+
 def update_tenant(token_id, tenant_id, data):
     """更新租户信息"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}

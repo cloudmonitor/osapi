@@ -42,6 +42,14 @@ def get_tenant_subnets(token_id):
     return r.json()
 
 
+def get_subnets_info(token_id, subnet_id):
+    """根据subnet_id获取subnet信息"""
+    all_subnets = get_tenant_subnets(token_id)
+    for i in range(len(all_subnets["subnets"])):
+        if subnet_id == all_subnets["subnets"][i]["id"]:
+            return all_subnets["subnets"][i]
+
+
 def get_tenant_routers(token_id):
     """获取租户的路由"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}

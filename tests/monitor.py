@@ -16,6 +16,8 @@ from osapi.user import *
 from osapi.images import *
 from osapi.admin.abstract import *
 from osapi.admin.physical_host import *
+from osapi.admin.tenant_user import *
+from osapi.admin.tenant_resource import *
 from osapi.nova import get_tenant_instance_inteface
 from osapi.sdnapi.settings import OPENFLOWDB_CONN, BASE_URL
 from osapi.sdnapi import Controller, StaticFlowPusher
@@ -73,11 +75,10 @@ if __name__ == "__main__":
     # print json.dumps(get_server_interface(token_id, tenant_id, "3d77c37a-a67e-43b9-a10d-f037472a5319"))
     # print json.dumps(get_tenant_instance_inteface(token_id, tenant_id, "3d77c37a-a67e-43b9-a10d-f037472a5319"))
     # print json.dumps(get_tenant_instance_host_ip(token_id, tenant_id, "3d77c37a-a67e-43b9-a10d-f037472a5319"))
-    print json.dumps(get_abstarct_info(admin_token_id, "2017-01-12 07:00:00.000000", "2017-01-12 08:00:00.000000", admin_tenant_id))
+    print json.dumps(get_abstarct_info(admin_token_id, "2017-01-01 00:00:00.000000", "2017-01-18 08:00:00.000000", admin_tenant_id))
     # print json.dumps(get_physical_usage(admin_token_id, admin_tenant_id))
     # print json.dumps(get_statistics_info(admin_token_id, admin_tenant_id))
     # print json.dumps(get_hypervisor_info(admin_token_id, admin_tenant_id, "1"))
     # print json.dumps(get_users_list(admin_token_id))
-    # print json.dumps(get_all_tenant_instances())
-    # print json.dumps(get_num_info(admin_token_id))
-
+    # print json.dumps(get_tenant_used_info(admin_token_id, admin_tenant_id))
+    # print json.dumps(delete_tenant("2bcab976a7b24fb6b146a562c8829077", "4dfb08fcf39940759cf723729bbbad61"))
