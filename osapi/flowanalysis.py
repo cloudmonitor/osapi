@@ -42,7 +42,7 @@ def get_tenant_top_instance(tenant_id, curr_type):
         last_time = now_time - 10 * 24 * 60 * 60 * 1000
     else:
         last_time = now_time
-    result = db.flow.aggregate([{"$match": {"project_id": tenant_id,
+    result = db.flow.aggregate([{"$match": {"tenant_id": tenant_id,
                                             "timestap": {"$gte": last_time}}},
                                 {"$group": {"_id": {"instance_id": "$instance_id", "instance_name": "$instance_name"},
                                             "count": {"$sum": "$size"}}},
@@ -65,7 +65,7 @@ def get_tenant_top_protocol(tenant_id, curr_type):
         last_time = now_time - 10 * 24 * 60 * 60 * 1000
     else:
         last_time = now_time
-    result = db.flow.aggregate([{"$match": {"project_id": tenant_id,
+    result = db.flow.aggregate([{"$match": {"tenant_id": tenant_id,
                                             "timestap": {"$gte": last_time}}},
                                 {"$group": {"_id": "$ipprotocol", "count": {"$sum": 1}}},
                                 {"$sort": {"count": -1}},
@@ -87,7 +87,7 @@ def get_tenant_top_ip(tenant_id, curr_type):
         last_time = now_time - 10 * 24 * 60 * 60 * 1000
     else:
         last_time = now_time
-    result = db.flow.aggregate([{"$match": {"project_id": tenant_id,
+    result = db.flow.aggregate([{"$match": {"tenant_id": tenant_id,
                                             "timestap": {"$gte": last_time}}},
                                 {"$group": {"_id": "$ipsource", "count": {"$sum": 1}}},
                                 {"$sort": {"count": -1}},
@@ -109,7 +109,7 @@ def get_tenant_top_port(tenant_id, curr_type):
         last_time = now_time - 10 * 24 * 60 * 60 * 1000
     else:
         last_time = now_time
-    result = db.flow.aggregate([{"$match": {"project_id": tenant_id,
+    result = db.flow.aggregate([{"$match": {"tenant_id": tenant_id,
                                             "timestap": {"$gte": last_time},
                                             "ipprotocol": {"$in": [6, 17]}}},
                                 {"$group": {"_id": "$srcport_or_icmptype", "count": {"$sum": 1}}},
@@ -132,7 +132,7 @@ def get_tenant_top_protocol_port(tenant_id, curr_type):
         last_time = now_time - 10 * 24 * 60 * 60 * 1000
     else:
         last_time = now_time
-    result = db.flow.aggregate([{"$match": {"project_id": tenant_id,
+    result = db.flow.aggregate([{"$match": {"tenant_id": tenant_id,
                                             "timestap": {"$gte": last_time}}},
                                 {"$group": {"_id": {"ipprotocol": "$ipprotocol",
                                                     "dstport_or_icmpcode": "$dstport_or_icmpcode"},
@@ -156,7 +156,7 @@ def get_tenant_top_ip_link(tenant_id, curr_type):
         last_time = now_time - 10 * 24 * 60 * 60 * 1000
     else:
         last_time = now_time
-    result = db.flow.aggregate([{"$match": {"project_id": tenant_id,
+    result = db.flow.aggregate([{"$match": {"tenant_id": tenant_id,
                                             "timestap": {"$gte": last_time}}},
                                 {"$group": {"_id": {"ipsource": "$ipsource", "ipdestination": "$ipdestination"},
                                             "count": {"$sum": "$size"}}},
@@ -179,7 +179,7 @@ def get_tenant_top_session(tenant_id, curr_type):
         last_time = now_time - 10 * 24 * 60 * 60 * 1000
     else:
         last_time = now_time
-    result = db.flow.aggregate([{"$match": {"project_id": tenant_id,
+    result = db.flow.aggregate([{"$match": {"tenant_id": tenant_id,
                                             "timestap": {"$gte": last_time}}},
                                 {"$group": {"_id": {"ipsource": "$ipsource", "ipdestination": "$ipdestination",
                                                     "srcport_or_icmptype": "$srcport_or_icmptype",
@@ -205,7 +205,7 @@ def get_instance_top_ip_link(tenant_id, instance_id, curr_type):
         last_time = now_time - 10 * 24 * 60 * 60 * 1000
     else:
         last_time = now_time
-    result = db.flow.aggregate([{"$match": {"project_id": tenant_id,
+    result = db.flow.aggregate([{"$match": {"tenant_id": tenant_id,
                                             "instance_id": instance_id,
                                             "timestap": {"$gte": last_time}}},
                                 {"$group": {"_id": {"ipsource": "$ipsource", "ipdestination": "$ipdestination"},
@@ -229,7 +229,7 @@ def get_instance_top_protocol_port(tenant_id, instance_id, curr_type):
         last_time = now_time - 10 * 24 * 60 * 60 * 1000
     else:
         last_time = now_time
-    result = db.flow.aggregate([{"$match": {"project_id": tenant_id,
+    result = db.flow.aggregate([{"$match": {"tenant_id": tenant_id,
                                             "instance_id": instance_id,
                                             "timestap": {"$gte": last_time}}},
                                 {"$group": {"_id": {"ipprotocol": "$ipprotocol",
@@ -254,7 +254,7 @@ def get_instance_top_session(tenant_id, instance_id, curr_type):
         last_time = now_time - 10 * 24 * 60 * 60 * 1000
     else:
         last_time = now_time
-    result = db.flow.aggregate([{"$match": {"project_id": tenant_id,
+    result = db.flow.aggregate([{"$match": {"tenant_id": tenant_id,
                                             "instance_id": instance_id,
                                             "timestap": {"$gte": last_time}}},
                                 {"$group": {"_id": {"ipsource": "$ipsource", "ipdestination": "$ipdestination",
@@ -281,7 +281,7 @@ def get_instance_top_src_ip(tenant_id, instance_id, curr_type):
         last_time = now_time - 10 * 24 * 60 * 60 * 1000
     else:
         last_time = now_time
-    result = db.flow.aggregate([{"$match": {"project_id": tenant_id,
+    result = db.flow.aggregate([{"$match": {"tenant_id": tenant_id,
                                             "instance_id": instance_id,
                                             # "macsource": {"$ne": mac_addr},
                                             "timestap": {"$gte": last_time}}},
@@ -305,7 +305,7 @@ def get_instance_top_dst_ip(tenant_id, instance_id, curr_type):
         last_time = now_time - 10 * 24 * 60 * 60 * 1000
     else:
         last_time = now_time
-    result = db.flow.aggregate([{"$match": {"project_id": tenant_id,
+    result = db.flow.aggregate([{"$match": {"tenant_id": tenant_id,
                                             "instance_id": instance_id,
                                             # "macdestination": {"$ne": mac_addr},
                                             "timestap": {"$gte": last_time}}},
@@ -329,7 +329,7 @@ def get_instance_top_src_port(tenant_id, instance_id, curr_type):
         last_time = now_time - 10 * 24 * 60 * 60 * 1000
     else:
         last_time = now_time
-    result = db.flow.aggregate([{"$match": {"project_id": tenant_id,
+    result = db.flow.aggregate([{"$match": {"tenant_id": tenant_id,
                                             "instance_id": instance_id,
                                             "timestap": {"$gte": last_time},
                                             "ipprotocol": {"$in": [6, 17]}}},
@@ -353,7 +353,7 @@ def get_instance_top_dst_port(tenant_id, instance_id, curr_type):
         last_time = now_time - 10 * 24 * 60 * 60 * 1000
     else:
         last_time = now_time
-    result = db.flow.aggregate([{"$match": {"project_id": tenant_id,
+    result = db.flow.aggregate([{"$match": {"tenant_id": tenant_id,
                                             "instance_id": instance_id,
                                             "timestap": {"$gte": last_time},
                                             "ipprotocol": {"$in": [6, 17]}}},
@@ -376,7 +376,7 @@ def get_instance_tcpflags_syn_flood(tenant_id, instance_id, curr_type):
         last_time = now_time - 10 * 24 * 60 * 60 * 1000
     else:
         last_time = now_time
-    result = db.flow.aggregate([{"$match": {"project_id": tenant_id,
+    result = db.flow.aggregate([{"$match": {"tenant_id": tenant_id,
                                             "instance_id": instance_id,
                                             "timestap": {"$gte": last_time},
                                             "ipprotocol": 6}},
