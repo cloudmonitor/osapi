@@ -38,7 +38,7 @@ def delete_tanant_list(token_id, tenant_id_list):
     """删除一个列表中的项目，{"tenant_id":[,]}"""
     status_code_list = {}  # 用于存储返回值
     status_code_list["status_code"] = []
-    tenant_id_list = json.loads(tenant_id_list)
+    # tenant_id_list = json.loads(tenant_id_list)
     for i in range(len(tenant_id_list["tenant_id"])):
         status_code = delete_tenant(token_id, tenant_id_list["tenant_id"][i])
         status_code_list["status_code"].append(status_code)
