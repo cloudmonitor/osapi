@@ -136,6 +136,16 @@ def delete_user(token_id, user_id):
     return r.status_code
 
 
+def delete_user_list(token_id, user_id_list):
+    """删除一个列表中的用户，{"user_id":[,]}"""
+    status_code_list = {}  # 用于存储返回值
+    # tenant_id_list = json.loads(tenant_id_list)
+    for i in range(len(user_id_list["user_id"])):
+        status_code = delete_user(token_id, user_id_list["user_id"][i])
+        status_code_list[user_id_list["user_id"][i]] = status_code
+    return status_code_list
+
+
 def update_user(token_id, user_id, data):
     """删除用户，删除成功返回204"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
@@ -144,7 +154,28 @@ def update_user(token_id, user_id, data):
     return r.json()
 
 
+def get_all_roles(token_id):
+    """获取所有的角色"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = KEYSTONE_ENDPOINT_ADMIN + "/OS-KSADM/roles"
+    r = requests.get(url=url, headers=headers)
+    return r.json()
+
+
+def grant_tenant_user_role(token_id, tenant_id, user_id, role_id):
+    """给一个租户的用户授予角色"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = KEYSTONE_ENDPOINT_ADMIN + "/tenants/" + tenant_id + "/users/" + user_id + "/roles/OS-KSADM/" + role_id
+    r = requests.put(url, headers=headers)
+    return r.json()
+
+
 if __name__ == "__main__":
+    from osapi.identify import get_admin_token
+
+    admin_token = get_admin_token("admin", "admin")
+    admin_token_id = admin_token['access']['token']['id']
+    admin_tenant_id = admin_token['access']['token']['tenant']['id']
     tenant = {
         "tenant": {
             "name": "test02",
@@ -177,7 +208,8 @@ if __name__ == "__main__":
     # print json.dumps(create_tenant("e90c0fdf0c364474b9c375a2e5a4e67d", json.dumps(tenant)))
     # print json.dumps(update_tenant("e90c0fdf0c364474b9c375a2e5a4e67d", "676d2619d151466e9d1da24b37a61e74", json.dumps(tenant)))
     # print json.dumps(create_user("e877e05d418d48acba0483e355e16a50", json.dumps(user)))
-    print json.dumps(get_tenant_quota("5b35a6ff837a460a9b83577b020982c6", "5d03fc15631048d19bedaf1f911568e8", "676d2619d151466e9d1da24b37a61e74"))
-    print json.dumps(get_tenant_neutron_quota("5b35a6ff837a460a9b83577b020982c6", "676d2619d151466e9d1da24b37a61e74"))
+    # print json.dumps(get_tenant_quota("5b35a6ff837a460a9b83577b020982c6", "5d03fc15631048d19bedaf1f911568e8", "676d2619d151466e9d1da24b37a61e74"))
+    # print json.dumps(get_tenant_neutron_quota("5b35a6ff837a460a9b83577b020982c6", "676d2619d151466e9d1da24b37a61e74"))
+    print json.dumps(get_all_roles(admin_token_id))
 
 

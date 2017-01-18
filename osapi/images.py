@@ -11,9 +11,8 @@ def get_tenant_images(token_id):
     return r.json()
 
 
-def get_image_name(token_id, image_id):
+def get_image_name(image_id, images_info):
     """通过image_id获取image的名字"""
-    images_info = get_tenant_images(token_id)
     image_name = "unknown"
     for i in range(len(images_info["images"])):
         if image_id == images_info["images"][i]["id"]:

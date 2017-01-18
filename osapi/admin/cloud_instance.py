@@ -2,8 +2,8 @@
 
 from osapi.settings import *
 
-from osapi.flavors import get_flavor_name
-from osapi.images import get_image_name
+from osapi.flavors import get_flavor_name, get_tenant_flavors
+from osapi.images import get_image_name, get_tenant_images
 from tenant_user import get_all_tenants
 
 
@@ -13,22 +13,28 @@ def get_all_tenant_instances(token_id, admin_tenant_id):
     url = NOVA_ENDPOINT.format(tenant_id=admin_tenant_id)
     r = requests.get(url+'/servers/detail?all_tenants=1', headers=headers)
     instances_info = r.json()
+    flavors_info = get_tenant_flavors(token_id, admin_tenant_id)
+    images_info = get_tenant_images(token_id)
+    tenants_info = get_all_tenants(token_id)
     for i in range(len(instances_info['servers'])):
+        # 获取实例端口详情
         ret = requests.get(url + '/servers/' + instances_info['servers'][i]['id'] + "/os-interface", headers=headers)
         instances_info['servers'][i]['interfaceAttachments'] = ret.json()['interfaceAttachments']
-        flavor_name = get_flavor_name(token_id, admin_tenant_id, instances_info['servers'][i]["flavor"]["id"])
+        # 获取实例类型名
+        flavor_name = get_flavor_name(instances_info['servers'][i]["flavor"]["id"], flavors_info)
         instances_info['servers'][i]["flavor"]["flavor_name"] = flavor_name
-        image_name = get_image_name(token_id, instances_info['servers'][i]["image"]["id"])
+        # 获取实例镜像名
+        image_name = get_image_name(instances_info['servers'][i]["image"]["id"], images_info)
         instances_info['servers'][i]['image']['image_name'] = image_name
-        tenant_name = _get_instance_tenant_name(token_id, instances_info['servers'][i]["tenant_id"])
+        # 获取实例租户名
+        tenant_name = get_instance_tenant_name(instances_info['servers'][i]["tenant_id"], tenants_info)
         instances_info['servers'][i]["tenant_name"] = tenant_name
     return instances_info
 
 
-def _get_instance_tenant_name(token_id, instance_tenant_id):
-    tenants = get_all_tenants(token_id)
+def get_instance_tenant_name(instance_tenant_id, tenants_info):
     tenant_name = "unknown"
-    for tenant in tenants["tenants"]:
+    for tenant in tenants_info["tenants"]:
         if instance_tenant_id == tenant["id"]:
             tenant_name = tenant["name"]
             break

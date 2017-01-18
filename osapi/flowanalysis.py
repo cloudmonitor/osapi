@@ -7,6 +7,28 @@ from mongodbconn import MongoHelper
 from settings import *
 
 
+def get_top_tenant(curr_type):
+    """统计所有租户流量top 5"""
+    conn = MongoHelper(FLOWDB_CONN).getconn()
+    db = conn["flowdb"]
+    now_time = int(time.time() * 1000)
+    if curr_type == "minute":
+        last_time = now_time - 10 * 60 * 1000
+    elif curr_type == "hour":
+        last_time = now_time - 10 * 60 * 60 * 1000
+    elif curr_type == "day":
+        last_time = now_time - 10 * 24 * 60 * 60 * 1000
+    else:
+        last_time = now_time
+    result = db.flow.aggregate([{"$match": {"timestap": {"$gte": last_time}}},
+                                {"$group": {"_id": {"tenant_id": "$tenant_id", "tenant_name": "$tenant_name"},
+                                            "count": {"$sum": "$size"}}},
+                                {"$sort": {"count": -1}},
+                                {"$limit": 5}])
+    conn.close()
+    return list(result)
+
+
 def get_tenant_top_instance(tenant_id, curr_type):
     """统计最近流量中虚拟机 TOP 5"""
     conn = MongoHelper(FLOWDB_CONN).getconn()
@@ -22,7 +44,8 @@ def get_tenant_top_instance(tenant_id, curr_type):
         last_time = now_time
     result = db.flow.aggregate([{"$match": {"project_id": tenant_id,
                                             "timestap": {"$gte": last_time}}},
-                                {"$group": {"_id": {"instance_id": "$instance_id", "instance_name": "$instance_name"}, "count": {"$sum": "$size"}}},
+                                {"$group": {"_id": {"instance_id": "$instance_id", "instance_name": "$instance_name"},
+                                            "count": {"$sum": "$size"}}},
                                 {"$sort": {"count": -1}},
                                 {"$limit": 5}])
     conn.close()
@@ -111,7 +134,8 @@ def get_tenant_top_protocol_port(tenant_id, curr_type):
         last_time = now_time
     result = db.flow.aggregate([{"$match": {"project_id": tenant_id,
                                             "timestap": {"$gte": last_time}}},
-                                {"$group": {"_id": {"ipprotocol": "$ipprotocol", "dstport_or_icmpcode": "$dstport_or_icmpcode"},
+                                {"$group": {"_id": {"ipprotocol": "$ipprotocol",
+                                                    "dstport_or_icmpcode": "$dstport_or_icmpcode"},
                                             "count": {"$sum": 1}}},
                                 {"$sort": {"count": -1}},
                                 {"$limit": 10}])
