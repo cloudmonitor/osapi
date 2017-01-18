@@ -61,4 +61,4 @@ if __name__ == "__main__":
     # print json.dumps(get_tenant_used_info(admin_token_id, admin_tenant_id))
     # print json.dumps(delete_tenant("2bcab976a7b24fb6b146a562c8829077", "4dfb08fcf39940759cf723729bbbad61"))
     # print json.dumps(delete_tenant(admin_token_id, "5c40e388d58040589e68fec04b20b2b8"))
-    print json.dumps(delete_tanant_list(admin_token_id, '{"tenant_id": ["28cc5c111fd4484f854f1927aebfca10", "6539d28ee04b4a318be8b2b7a1df50f8"]}'))
+    print json.dumps(delete_tanant_list(admin_token_id, '{"tenant_id": ["192c73c94f914e9599fccbb32070f5e5", "b5fd0f4bfe154095ab3f48b7623f854f"]}'))
