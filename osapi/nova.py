@@ -3,11 +3,10 @@
 import hashlib
 
 from settings import *
-from images import get_tenant_images
+from images import get_tenant_images, get_image_name
 from identify import get_admin_token
 from osapi.admin import get_hypervisor_detail
-from images import get_image_name
-from flavors import get_flavor_name
+from flavors import get_flavor_name, get_tenant_flavors
 
 
 def get_tenant_instances(token_id, tenant_id):
@@ -21,10 +20,12 @@ def get_tenant_instances(token_id, tenant_id):
 def get_tenant_instances_image_flavor(token_id, tenant_id):
     """获取某一租户下的所有vm,并将镜像的名字加入到了虚拟机的内容中"""
     instances_info = get_tenant_instances(token_id, tenant_id)
+    flavors_info = get_tenant_flavors(token_id, tenant_id)
+    images_info = get_tenant_images(token_id)
     for i in range(len(instances_info['servers'])):
-        image_name = get_image_name(token_id, instances_info['servers'][i]['image']['id'])
+        image_name = get_image_name(instances_info['servers'][i]['image']['id'], images_info)
         instances_info['servers'][i]['image']['image_name'] = image_name
-        flavor_name = get_flavor_name(token_id, tenant_id, instances_info['servers'][i]['flavor']['id'])
+        flavor_name = get_flavor_name(instances_info['servers'][i]['flavor']['id'], flavors_info)
         instances_info['servers'][i]['flavor']['flavor_name'] = flavor_name
     return instances_info
 
