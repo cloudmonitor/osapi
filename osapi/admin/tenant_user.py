@@ -13,6 +13,8 @@ def get_all_tenants(token_id):
     for tenant in tenants["tenants"]:
         if tenant["name"] == "service":
             del_tenants.append(tenant)
+        if tenant["name"] == "admin":
+            del_tenants.append(tenant)
     for del_tenant in del_tenants:
         tenants["tenants"].remove(del_tenant)
     return tenants
@@ -115,6 +117,8 @@ def get_all_users(token_id):
             del_users.append(user)
         elif user["name"] == "glance":
             del_users.append(user)
+        elif user["name"] == "admin":
+            del_users.append(user)
     for del_user in del_users:
         users["users"].remove(del_user)
     return users
@@ -159,7 +163,14 @@ def get_all_roles(token_id):
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = KEYSTONE_ENDPOINT_ADMIN + "/OS-KSADM/roles"
     r = requests.get(url=url, headers=headers)
-    return r.json()
+    roles = r.json()
+    del_roles = []
+    for role in roles["roles"]:
+        if role["name"] == "admin":
+            del_roles.append(role)
+    for del_role in del_roles:
+        roles["roles"].remove(del_role)
+    return roles
 
 
 def grant_tenant_user_role(token_id, tenant_id, user_id, role_id):
@@ -210,6 +221,6 @@ if __name__ == "__main__":
     # print json.dumps(create_user("e877e05d418d48acba0483e355e16a50", json.dumps(user)))
     # print json.dumps(get_tenant_quota("5b35a6ff837a460a9b83577b020982c6", "5d03fc15631048d19bedaf1f911568e8", "676d2619d151466e9d1da24b37a61e74"))
     # print json.dumps(get_tenant_neutron_quota("5b35a6ff837a460a9b83577b020982c6", "676d2619d151466e9d1da24b37a61e74"))
-    print json.dumps(get_all_roles(admin_token_id))
+    print json.dumps(get_tenant_user_role(admin_token_id, admin_tenant_id, "bfbe4e2b9bc24f7dab77319d290ea134"))
 
 
