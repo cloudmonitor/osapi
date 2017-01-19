@@ -54,16 +54,16 @@ def update_tenant(token_id, tenant_id, data):
     return r.json()
 
 
-def get_tenant_quota(token_id, admin_tenant_id, tenant_id):
-    """获取租户配额信息"""
+def get_tenant_basic_quota(token_id, admin_tenant_id, tenant_id):
+    """获取租户基本配额信息"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NOVA_ENDPOINT.format(tenant_id=admin_tenant_id) + "/os-quota-sets/" + tenant_id
     r = requests.get(url=url, headers=headers)
     return r.json()
 
 
-def update_tenant_quota(token_id, admin_tenant_id, tenant_id, data):
-    """更新租户配额信息"""
+def update_tenant_basic_quota(token_id, admin_tenant_id, tenant_id, data):
+    """更新租户基本配额信息"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NOVA_ENDPOINT.format(tenant_id=admin_tenant_id) + "/os-quota-sets/" + tenant_id
     r = requests.post(url=url, data=data, headers=headers)
@@ -223,8 +223,8 @@ if __name__ == "__main__":
     # print json.dumps(create_tenant("e90c0fdf0c364474b9c375a2e5a4e67d", json.dumps(tenant)))
     # print json.dumps(update_tenant("e90c0fdf0c364474b9c375a2e5a4e67d", "676d2619d151466e9d1da24b37a61e74", json.dumps(tenant)))
     # print json.dumps(create_user("e877e05d418d48acba0483e355e16a50", json.dumps(user)))
-    # print json.dumps(get_tenant_quota("5b35a6ff837a460a9b83577b020982c6", "5d03fc15631048d19bedaf1f911568e8", "676d2619d151466e9d1da24b37a61e74"))
-    # print json.dumps(get_tenant_neutron_quota("5b35a6ff837a460a9b83577b020982c6", "676d2619d151466e9d1da24b37a61e74"))
-    print json.dumps(get_tenant_users(admin_token_id, admin_tenant_id))
+    print json.dumps(get_tenant_quota(admin_token_id, admin_tenant_id, "fab30037b2d54be484520cd16722f63c"))
+    print json.dumps(get_tenant_neutron_quota(admin_token_id, "fab30037b2d54be484520cd16722f63c"))
+    # print json.dumps(get_tenant_users(admin_token_id, admin_tenant_id))
 
 
