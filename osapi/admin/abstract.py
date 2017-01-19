@@ -7,6 +7,7 @@ from osapi.nova import *
 from osapi.neutron import *
 from osapi.admin.cloud_instance import *
 from osapi.admin.physical_host import get_hypervisor_detail
+from osapi.admin.tenant_user import get_tenant_info
 
 
 def get_all_usage_data(token_id, start_time, stop_time, tenant_id):
@@ -17,13 +18,16 @@ def get_all_usage_data(token_id, start_time, stop_time, tenant_id):
     return r.json()
 
 
-def get_tenant_usage(token_id, start_time, stop_time, tenant_id ):
+def get_tenant_usage(token_id, start_time, stop_time, tenant_id):
     """获取租户的虚拟内核、磁盘、内存以及相应的使用时间"""
     tenants_usage_info = {}  # 用于最后返回的数据
     tenants_usage_info["tenant_usages"] = []
     usage_info = get_all_usage_data(token_id, start_time, stop_time, tenant_id)   # 获取整体的数据
     for i in range(0, len(usage_info["tenant_usages"])):
         tenant_usage_data = copy.deepcopy(usage_info["tenant_usages"][i])  # 深度复制出单个用户统计数据
+        project_id = usage_info["tenant_usages"][i]["tenant_id"]
+        tenant_name = get_tenant_info(token_id, project_id)  # 根据项目id获取项目的名字
+        tenant_usage_data["tenant_name"] = tenant_name
         tenant_usage_data.pop("server_usages")  # 除去单租户数据中的“server_usages”字段
         single_tenant_data = {}  # 用于统计mb、vcpus、local_gb的值
         memory_mb = 0

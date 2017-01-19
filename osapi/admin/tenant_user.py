@@ -20,6 +20,14 @@ def get_all_tenants(token_id):
     return tenants
 
 
+def get_tenant_info(token_id, tenant_id):
+    """根据租户ID获取租户名字"""
+    all_tenant = get_all_tenants(token_id)
+    for i in range(len(all_tenant["tenants"])):
+        if tenant_id == all_tenant["tenants"][i]["id"]:
+            return all_tenant["tenants"][i]["name"]
+
+
 def create_tenant(token_id, data):
     """创建租户"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
@@ -233,6 +241,6 @@ if __name__ == "__main__":
             # "tenantId": "676d2619d151466e9d1da24b37a61e74"
         }
     }
-    print json.dumps(update_user(admin_token_id, "4256e063bd9546e388a6db938bdd9cb1", json.dumps(user_data)))
-
+    # print json.dumps(update_user(admin_token_id, "4256e063bd9546e388a6db938bdd9cb1", json.dumps(user_data)))
+    print json.dumps(get_all_tenants(admin_token_id))
 
