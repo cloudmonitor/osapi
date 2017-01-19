@@ -126,7 +126,7 @@ def _admin_get_tenant_static(admin_token_id,admin_tenant_id,project_id):
     return tenant_abstract
 
 
-def get_tenant_usage_abstract(admin_token_id,admin_tenant_id, project_id):
+def get_tenant_usage_abstract(admin_token_id, admin_tenant_id, project_id):
     """获取租户资源使用情况概览"""
     tenant_limit = {}  # 用于保存租户计算和网络方面的配额信息
     tenant_limit_compute = get_tenant_compute_limits(admin_token_id, admin_tenant_id, project_id)
@@ -140,7 +140,7 @@ def get_tenant_usage_abstract(admin_token_id,admin_tenant_id, project_id):
     tenant_limit["security_groups_rule_used"] = _admin_get_tenant_security_groups_rule(admin_token_id, project_id)
     tenant_limit["routers_used"] = _admin_get_tenant_router(admin_token_id, project_id)
     tenant_limit["ports_used"] = _admin_get_tenant_ports(admin_token_id, project_id)
-    tenant_tmp = _admin_get_tenant_static(admin_token_id,admin_tenant_id,project_id)
+    tenant_tmp = _admin_get_tenant_static(admin_token_id, admin_tenant_id, project_id)
     tenant_limit_static = dict(tenant_limit, **tenant_tmp)
     return tenant_limit_static
 
@@ -173,7 +173,7 @@ def get_tenant_networks(admin_token_id, project_id):
     return tenant_network_info
 
 
-def get_tenant_routers(admin_token_id, project_id):
+def get_tenant_routers_info(admin_token_id, project_id):
     """获取租户下所有的路由器"""
     tenant_routers = {}
     tenant_routers["routers"] = []
@@ -189,7 +189,7 @@ if __name__ == "__main__":
     admin_tenant_id = admin_json['access']['token']['tenant']['id']
     admin_token_id = admin_json['access']['token']['id']
     # print json.dumps(get_admin_tenant_limits(admin_token_id, admin_tenant_id, "fab30037b2d54be484520cd16722f63c"))
-    # print json.dumps(get_tenant_usage_abstart(admin_token_id,admin_tenant_id, "fab30037b2d54be484520cd16722f63c"))
+    print json.dumps(get_tenant_usage_abstract(admin_token_id,admin_tenant_id, "fab30037b2d54be484520cd16722f63c"))
     # print json.dumps(get_all_tenant_instances(admin_token_id, admin_tenant_id))
     # print json.dumps(get_tenant_instances(admin_token_id, admin_tenant_id, "fab30037b2d54be484520cd16722f63c"))
     # print json.dumps(get_tenant_routers_info(admin_token_id, "fab30037b2d54be484520cd16722f63c"))
