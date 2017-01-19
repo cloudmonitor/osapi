@@ -5,7 +5,8 @@ from osapi.floatingip import get_floating_ips
 from osapi.identify import get_admin_token
 from osapi.securitygroup import get_security_groups, get_security_groups_rules
 from osapi.neutron import *
-from osapi.admin.cloud_instance import get_all_tenant_instances
+from cloud_instance import get_all_tenant_instances
+from tenant_user import get_tenant_neutron_quota
 
 
 def get_tenant_compute_limits(admin_token_id, admin_tenant_id, project_id):
@@ -19,17 +20,6 @@ def get_tenant_compute_limits(admin_token_id, admin_tenant_id, project_id):
     tenant_compute_limit["cores"] = tenant_compute_limits_info["quota_set"]["cores"]
     tenant_compute_limit["instances"] = tenant_compute_limits_info["quota_set"]["instances"]
     return tenant_compute_limit
-
-
-def get_tenant_network_limits(admin_token_id, project_id):
-    """超级管理员下获取租户的配额"""
-    headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
-    url = NEUTRON_ENDPOINT+'/quotas'
-    r = requests.get(url, headers=headers)
-    tenant_network_limits_info = r.json()
-    for i in range(len(tenant_network_limits_info["quotas"])):
-        if project_id == tenant_network_limits_info["quotas"][i]["tenant_id"]:
-            return tenant_network_limits_info["quotas"][i]
 
 
 def _admin_get_tenant_subnets_used(admin_token_id, project_id):
@@ -130,8 +120,8 @@ def get_tenant_usage_abstract(admin_token_id, admin_tenant_id, project_id):
     """获取租户资源使用情况概览"""
     tenant_limit = {}  # 用于保存租户计算和网络方面的配额信息
     tenant_limit_compute = get_tenant_compute_limits(admin_token_id, admin_tenant_id, project_id)
-    tenant_limit_network = get_tenant_network_limits(admin_token_id, project_id)
-    tenant_limit_tmp = dict(tenant_limit_compute, **tenant_limit_network)
+    tenant_limit_network = get_tenant_neutron_quota(admin_token_id, project_id)
+    tenant_limit_tmp = dict(tenant_limit_compute, **tenant_limit_network["quota"])
     tenant_limit["quotas"] = tenant_limit_tmp
     tenant_limit["subnets_used"] = _admin_get_tenant_subnets_used(admin_token_id, project_id)
     tenant_limit["networks_used"] = _admin_get_tenant_networks_used(admin_token_id, project_id)
@@ -189,7 +179,7 @@ if __name__ == "__main__":
     admin_tenant_id = admin_json['access']['token']['tenant']['id']
     admin_token_id = admin_json['access']['token']['id']
     # print json.dumps(get_admin_tenant_limits(admin_token_id, admin_tenant_id, "fab30037b2d54be484520cd16722f63c"))
-    print json.dumps(get_tenant_usage_abstract(admin_token_id,admin_tenant_id, "fab30037b2d54be484520cd16722f63c"))
+    print json.dumps(get_tenant_usage_abstract(admin_token_id,admin_tenant_id, "676d2619d151466e9d1da24b37a61e74"))
     # print json.dumps(get_all_tenant_instances(admin_token_id, admin_tenant_id))
     # print json.dumps(get_tenant_instances(admin_token_id, admin_tenant_id, "fab30037b2d54be484520cd16722f63c"))
     # print json.dumps(get_tenant_routers_info(admin_token_id, "fab30037b2d54be484520cd16722f63c"))
