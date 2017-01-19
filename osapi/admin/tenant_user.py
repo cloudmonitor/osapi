@@ -91,7 +91,11 @@ def get_tenant_users(token_id, tenant_id):
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = KEYSTONE_ENDPOINT_ADMIN + "/tenants/" + tenant_id + "/users"
     r = requests.get(url=url, headers=headers)
-    return r.json()
+    users_info = r.json()
+    for user in users_info["users"]:
+        user_roles_info = get_tenant_user_role(token_id, tenant_id, user["id"])
+        user["roles"] = user_roles_info["roles"]
+    return users_info
 
 
 def get_tenant_user_role(token_id, tenant_id, user_id):
@@ -221,6 +225,6 @@ if __name__ == "__main__":
     # print json.dumps(create_user("e877e05d418d48acba0483e355e16a50", json.dumps(user)))
     # print json.dumps(get_tenant_quota("5b35a6ff837a460a9b83577b020982c6", "5d03fc15631048d19bedaf1f911568e8", "676d2619d151466e9d1da24b37a61e74"))
     # print json.dumps(get_tenant_neutron_quota("5b35a6ff837a460a9b83577b020982c6", "676d2619d151466e9d1da24b37a61e74"))
-    print json.dumps(get_tenant_user_role(admin_token_id, admin_tenant_id, "bfbe4e2b9bc24f7dab77319d290ea134"))
+    print json.dumps(get_tenant_users(admin_token_id, admin_tenant_id))
 
 
