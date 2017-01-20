@@ -21,12 +21,27 @@ def get_all_tenants(token_id):
 
 
 def get_tenant_name(tenant_id, tenants_info):
+    """根据所有租户信息以及租户id获取租户名"""
     tenant_name = "unknown"
     for tenant in tenants_info["tenants"]:
         if tenant_id == tenant["id"]:
             tenant_name = tenant["name"]
             break
     return tenant_name
+
+
+def get_tenant_name_by_tenant_id(token_id, tenant_id):
+    """根据租户ID获取租户名字"""
+    tenant_info = get_tenant_info_by_tenant_id(token_id, tenant_id)
+    return tenant_info["tenant"]["name"]
+
+
+def get_tenant_info_by_tenant_id(token_id, tenant_id):
+    """根据租户ID获取租户信息"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = KEYSTONE_ENDPOINT_ADMIN + "/tenants/" + tenant_id
+    r = requests.get(url=url, headers=headers)
+    return r.json()
 
 
 def create_tenant(token_id, data):
@@ -242,6 +257,6 @@ if __name__ == "__main__":
             # "tenantId": "676d2619d151466e9d1da24b37a61e74"
         }
     }
-    print json.dumps(update_user(admin_token_id, "4256e063bd9546e388a6db938bdd9cb1", json.dumps(user_data)))
-
+    # print json.dumps(update_user(admin_token_id, "4256e063bd9546e388a6db938bdd9cb1", json.dumps(user_data)))
+    print json.dumps(get_all_tenants(admin_token_id))
 
