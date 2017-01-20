@@ -52,27 +52,33 @@ def get_num_info(admin_token_id, admin_tenant_id):
     num_info = []
     user_num = len(get_users_list(admin_token_id)["users"])  # 获取用户数量
     user_num_info = {}
-    user_num_info["user_num"] = user_num
+    user_num_info["name"] = "user_num"
+    user_num_info["number"] = user_num
     num_info.append(user_num_info)
     physical_num = len(get_hypervisor_detail(admin_token_id, admin_tenant_id)["hypervisors"])  # 获取物理机的个数
     physical_num_info = {}
-    physical_num_info["physical_num"] = physical_num
+    physical_num_info["name"] = "physical_num"
+    physical_num_info["number"] = physical_num
     num_info.append(physical_num_info)
     server_num = len(get_all_tenant_instances(admin_token_id, admin_tenant_id)["servers"])  # 获取总的虚拟机个数
     server_num_info = {}
-    server_num_info["server_num"] = server_num
+    server_num_info["name"] = "server_num"
+    server_num_info["number"] = server_num
     num_info.append(server_num_info)
     network_num = len(get_all_networks(admin_token_id)["networks"])  # 获取网络个数
     network_num_info = {}
-    network_num_info["network_num"] = network_num
+    network_num_info["name"] = "network_num"
+    network_num_info["number"] = network_num
     num_info.append(network_num_info)
     subnet_num = len(get_tenant_subnets(admin_token_id)["subnets"])  # 获取子网个数
     subnet_num_info = {}
-    subnet_num_info["subnet_num"] = subnet_num
+    subnet_num_info["name"] = "subnet_num"
+    subnet_num_info["number"] = subnet_num
     num_info.append(subnet_num_info)
     router_num = len(get_tenant_routers(admin_token_id)["routers"])  # 获取路由器个数
     router_num_info = {}
-    router_num_info["router_num"] = router_num
+    router_num_info["name"] = "router_num"
+    router_num_info["number"] = router_num
     num_info.append(router_num_info)
     return num_info
 
