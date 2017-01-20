@@ -21,7 +21,6 @@ def get_all_networks(token_id):
     """获得所有的网络"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NEUTRON_ENDPOINT
-    print url
     r = requests.get(url+'/networks', headers=headers)
     return r.json()
 

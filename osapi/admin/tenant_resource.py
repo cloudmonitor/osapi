@@ -1,12 +1,14 @@
 # _*_ coding:utf-8 _*_
+
 from osapi.quota import get_tenant_used_info
 from osapi.settings import *
 from osapi.floatingip import get_floating_ips
 from osapi.identify import get_admin_token
 from osapi.securitygroup import get_security_groups, get_security_groups_rules
 from osapi.neutron import *
-from cloud_instance import get_all_tenant_instances
-from tenant_user import get_tenant_neutron_quota
+from osapi.flavors import get_tenant_flavors, get_flavor_name
+from osapi.images import get_tenant_images, get_image_name
+from tenant_user import get_tenant_neutron_quota, get_tenant_name, get_all_tenants
 
 
 def get_tenant_compute_limits(admin_token_id, admin_tenant_id, project_id):
@@ -137,41 +139,55 @@ def get_tenant_usage_abstract(admin_token_id, admin_tenant_id, project_id):
 
 def get_tenant_instances(admin_token_id, admin_tenant_id, project_id):
     """超级管理员获取租户下的所有虚拟机"""
-    tenant_instances = {}
-    tenant_instances["servers"] = []
-    all_tenant_instances_info = get_all_tenant_instances(admin_token_id, admin_tenant_id)
-    for i in range(len(all_tenant_instances_info["servers"])):
-        if project_id == all_tenant_instances_info["servers"][i]["tenant_id"]:
-            tenant_instances["servers"].append(all_tenant_instances_info["servers"][i])
-    return tenant_instances
+    headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
+    url = NOVA_ENDPOINT.format(tenant_id=admin_tenant_id)
+    r = requests.get(url + '/servers/detail?all_tenants=1&tenant_id=' + project_id, headers=headers)
+    instances_info = r.json()
+    flavors_info = get_tenant_flavors(admin_token_id, admin_tenant_id)
+    images_info = get_tenant_images(admin_token_id)
+    # 获取租户名
+    tenants_info = get_all_tenants(admin_token_id)
+    tenant_name = get_tenant_name(project_id, tenants_info)
+    for i in range(len(instances_info['servers'])):
+        # 获取实例端口详情
+        ret = requests.get(url + '/servers/' + instances_info['servers'][i]['id'] + "/os-interface", headers=headers)
+        instances_info['servers'][i]['interfaceAttachments'] = ret.json()['interfaceAttachments']
+        # 获取实例类型名
+        flavor_name = get_flavor_name(instances_info['servers'][i]["flavor"]["id"], flavors_info)
+        instances_info['servers'][i]["flavor"]["flavor_name"] = flavor_name
+        # 获取实例镜像名
+        image_name = get_image_name(instances_info['servers'][i]["image"]["id"], images_info)
+        instances_info['servers'][i]['image']['image_name'] = image_name
+        # 设置实例租户名
+        instances_info['servers'][i]["tenant_name"] = tenant_name
+    return instances_info
 
 
 def get_tenant_networks(admin_token_id, project_id):
     """超级管理获取租户的网络基本情况，返回租户下所有的网络和对应的子网"""
     tenant_network_info = {}
     tenant_network_info["networks"] = []
-    all_network_info = get_all_networks(admin_token_id)
-    for i in range(len(all_network_info["networks"])):
-        if project_id == all_network_info["networks"][i]["tenant_id"]:
-            network_info_tmp = copy.deepcopy(all_network_info["networks"][i])
-            for j in range(len(all_network_info["networks"][i]["subnets"])):
-                subnet_id = all_network_info["networks"][i]["subnets"][j]
-                subnet_info = get_subnets_info(admin_token_id, subnet_id)
-                network_info_tmp["subnets"].remove(subnet_id)
-                network_info_tmp["subnets"].append(subnet_info)
-            tenant_network_info["networks"].append(network_info_tmp)
+    headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT
+    r = requests.get(url + '/networks?tenant_id=' + project_id, headers=headers)
+    network_info = r.json()
+    for i in range(len(network_info["networks"])):
+        network_info_tmp = copy.deepcopy(network_info["networks"][i])
+        for j in range(len(network_info["networks"][i]["subnets"])):
+            subnet_id = network_info["networks"][i]["subnets"][j]
+            subnet_info = get_subnets_info(admin_token_id, subnet_id)
+            network_info_tmp["subnets"].remove(subnet_id)
+            network_info_tmp["subnets"].append(subnet_info)
+        tenant_network_info["networks"].append(network_info_tmp)
     return tenant_network_info
 
 
 def get_tenant_routers_info(admin_token_id, project_id):
     """获取租户下所有的路由器"""
-    tenant_routers = {}
-    tenant_routers["routers"] = []
-    all_tenant_routers = get_tenant_routers(admin_token_id)
-    for i in range(len(all_tenant_routers["routers"])):
-        if project_id == all_tenant_routers["routers"][i]["tenant_id"]:
-            tenant_routers["routers"].append(all_tenant_routers["routers"][i])
-    return tenant_routers
+    headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT
+    r = requests.get(url + '/routers?tenant_id=' + project_id, headers=headers)
+    return r.json()
 
 
 if __name__ == "__main__":
@@ -179,7 +195,8 @@ if __name__ == "__main__":
     admin_tenant_id = admin_json['access']['token']['tenant']['id']
     admin_token_id = admin_json['access']['token']['id']
     # print json.dumps(get_admin_tenant_limits(admin_token_id, admin_tenant_id, "fab30037b2d54be484520cd16722f63c"))
-    print json.dumps(get_tenant_usage_abstract(admin_token_id,admin_tenant_id, "676d2619d151466e9d1da24b37a61e74"))
+    # print json.dumps(get_tenant_usage_abstract(admin_token_id,admin_tenant_id, "676d2619d151466e9d1da24b37a61e74"))
     # print json.dumps(get_all_tenant_instances(admin_token_id, admin_tenant_id))
     # print json.dumps(get_tenant_instances(admin_token_id, admin_tenant_id, "fab30037b2d54be484520cd16722f63c"))
-    # print json.dumps(get_tenant_routers_info(admin_token_id, "fab30037b2d54be484520cd16722f63c"))
+    print json.dumps(get_tenant_routers_info(admin_token_id, "fab30037b2d54be484520cd16722f63c"))
+    # print json.dumps(get_tenant_networks(admin_token_id, "fab30037b2d54be484520cd16722f63c"))

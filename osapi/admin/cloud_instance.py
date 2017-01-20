@@ -4,7 +4,7 @@ from osapi.settings import *
 
 from osapi.flavors import get_flavor_name, get_tenant_flavors
 from osapi.images import get_image_name, get_tenant_images
-from tenant_user import get_all_tenants
+from tenant_user import get_all_tenants, get_tenant_name
 
 
 def get_all_tenant_instances(token_id, admin_tenant_id):
@@ -27,18 +27,9 @@ def get_all_tenant_instances(token_id, admin_tenant_id):
         image_name = get_image_name(instances_info['servers'][i]["image"]["id"], images_info)
         instances_info['servers'][i]['image']['image_name'] = image_name
         # 获取实例租户名
-        tenant_name = get_instance_tenant_name(instances_info['servers'][i]["tenant_id"], tenants_info)
+        tenant_name = get_tenant_name(instances_info['servers'][i]["tenant_id"], tenants_info)
         instances_info['servers'][i]["tenant_name"] = tenant_name
     return instances_info
-
-
-def get_instance_tenant_name(instance_tenant_id, tenants_info):
-    tenant_name = "unknown"
-    for tenant in tenants_info["tenants"]:
-        if instance_tenant_id == tenant["id"]:
-            tenant_name = tenant["name"]
-            break
-    return tenant_name
 
 
 def get_hypervisor_instances(token_id, admin_tenant_id, hypervisor_name):

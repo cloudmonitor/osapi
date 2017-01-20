@@ -20,6 +20,15 @@ def get_all_tenants(token_id):
     return tenants
 
 
+def get_tenant_name(tenant_id, tenants_info):
+    tenant_name = "unknown"
+    for tenant in tenants_info["tenants"]:
+        if tenant_id == tenant["id"]:
+            tenant_name = tenant["name"]
+            break
+    return tenant_name
+
+
 def create_tenant(token_id, data):
     """创建租户"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
