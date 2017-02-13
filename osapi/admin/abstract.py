@@ -8,6 +8,7 @@ from osapi.neutron import *
 from osapi.admin.cloud_instance import *
 from osapi.admin.physical_host import get_hypervisor_detail
 from osapi.admin.tenant_user import get_tenant_name_by_tenant_id
+from osapi.admin.tenant_resource import get_all_tenant_usage
 
 
 def get_all_usage_data(token_id, start_time, stop_time, tenant_id):
@@ -49,43 +50,43 @@ def get_tenant_usage(token_id, start_time, stop_time, tenant_id):
 
 def get_num_info(admin_token_id, admin_tenant_id):
     """获取租户、物理主机、虚拟主机、网络、子网、路由器个数"""
-    num_info = []
+    num_info = {}
+
     user_num = len(get_users_list(admin_token_id)["users"])  # 获取用户数量
-    user_num_info = {}
-    user_num_info["name"] = "user_num"
-    user_num_info["number"] = user_num
-    num_info.append(user_num_info)
+    num_info["user_num"] = user_num
+
+    tenant_num = len(get_all_tenants(admin_token_id)["tenants"])  # 获取租户数量
+    num_info["tenant_num"] = tenant_num
+
     physical_num = len(get_hypervisor_detail(admin_token_id, admin_tenant_id)["hypervisors"])  # 获取物理机的个数
-    physical_num_info = {}
-    physical_num_info["name"] = "physical_num"
-    physical_num_info["number"] = physical_num
-    num_info.append(physical_num_info)
+    num_info["physical_num"] = physical_num
+
     server_num = len(get_all_tenant_instances(admin_token_id, admin_tenant_id)["servers"])  # 获取总的虚拟机个数
-    server_num_info = {}
-    server_num_info["name"] = "server_num"
-    server_num_info["number"] = server_num
-    num_info.append(server_num_info)
+    num_info["server_num"] = server_num
+
     network_num = len(get_all_networks(admin_token_id)["networks"])  # 获取网络个数
-    network_num_info = {}
-    network_num_info["name"] = "network_num"
-    network_num_info["number"] = network_num
-    num_info.append(network_num_info)
+    num_info["network_num"] = network_num
+
     subnet_num = len(get_tenant_subnets(admin_token_id)["subnets"])  # 获取子网个数
-    subnet_num_info = {}
-    subnet_num_info["name"] = "subnet_num"
-    subnet_num_info["number"] = subnet_num
-    num_info.append(subnet_num_info)
+    num_info["subnet_num"] = subnet_num
+
     router_num = len(get_tenant_routers(admin_token_id)["routers"])  # 获取路由器个数
-    router_num_info = {}
-    router_num_info["name"] = "router_num"
-    router_num_info["number"] = router_num
-    num_info.append(router_num_info)
+    num_info["router_num"] = router_num
+
     return num_info
 
 
-def get_abstarct_info(token_id, start_time, stop_time, tenant_id):
+# def get_abstarct_info(token_id, start_time, stop_time, tenant_id):
+#     """获取整个云平台下的摘要信息"""
+#     tenant_usage = get_tenant_usage(token_id, start_time, stop_time, tenant_id)  # 获取资源使用情况信息
+#     num_info = get_num_info(token_id, tenant_id)
+#     tenant_usage["num_info"] = num_info
+#     return tenant_usage
+
+
+def get_abstarct_info(token_id, tenant_id):
     """获取整个云平台下的摘要信息"""
-    tenant_usage = get_tenant_usage(token_id, start_time, stop_time, tenant_id)  # 获取资源使用情况信息
+    tenant_usage = get_all_tenant_usage(token_id, tenant_id)  # 获取资源使用情况信息
     num_info = get_num_info(token_id, tenant_id)
     tenant_usage["num_info"] = num_info
     return tenant_usage

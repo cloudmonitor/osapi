@@ -94,7 +94,7 @@ def _admin_get_tenant_ports(admin_token_id, project_id):
     return ports_used
 
 
-def _admin_get_tenant_static(admin_token_id,admin_tenant_id,project_id):
+def _admin_get_tenant_static(admin_token_id, admin_tenant_id, project_id):
     """超级管理获取租户的云主机、虚拟内核、内存使用情况"""
     headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
     url = NOVA_ENDPOINT.format(tenant_id=admin_tenant_id)
@@ -135,6 +135,21 @@ def get_tenant_usage_abstract(admin_token_id, admin_tenant_id, project_id):
     tenant_tmp = _admin_get_tenant_static(admin_token_id, admin_tenant_id, project_id)
     tenant_limit_static = dict(tenant_limit, **tenant_tmp)
     return tenant_limit_static
+
+
+def get_all_tenant_usage(admin_token_id, admin_tenant_id):
+    """获取所有租户的资源使用概览"""
+    all_tenants_usage_info = {}
+    all_tenants_usage_info["tenants_usage_info"] = []
+    tenants_info = get_all_tenants(admin_token_id)
+    for tenant in tenants_info["tenants"]:
+        tenant_usage_info = get_tenant_usage_abstract(admin_token_id, admin_tenant_id, tenant["id"])
+        tenant_usage_info["id"] = tenant["id"]
+        tenant_usage_info["name"] = tenant["name"]
+        tenant_usage_info["description"] = tenant["description"]
+        tenant_usage_info["enabled"] = tenant["enabled"]
+        all_tenants_usage_info["tenants_usage_info"].append(tenant_usage_info)
+    return all_tenants_usage_info
 
 
 def get_tenant_instances(admin_token_id, admin_tenant_id, project_id):
