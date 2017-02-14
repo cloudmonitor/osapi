@@ -160,6 +160,22 @@ def create_user(token_id, data):
     return r.json()
 
 
+def create_user_with_tenant_user_role(token_id, data):
+    """创建用户"""
+    user = json.loads(data)
+    tenant_id = user["user"].pop("tenantId")
+    user_info = create_user(token_id, json.dumps(user))
+    user_id = user_info["user"]["id"]
+    all_roles = get_all_roles(token_id)
+    user_role_id = ""
+    for role in all_roles["roles"]:
+        if role["name"] == "user":
+            user_role_id = role["id"]
+            break
+    grant_tenant_user_role(token_id, tenant_id, user_id, user_role_id)
+    return user_info
+
+
 def delete_user(token_id, user_id):
     """删除用户，删除成功返回204"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
@@ -206,7 +222,41 @@ def grant_tenant_user_role(token_id, tenant_id, user_id, role_id):
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = KEYSTONE_ENDPOINT_ADMIN + "/tenants/" + tenant_id + "/users/" + user_id + "/roles/OS-KSADM/" + role_id
     r = requests.put(url, headers=headers)
-    return r.json()
+    return r
+
+
+def revoke_tenant_user_role(token_id, tenant_id, user_id, role_id):
+    """给一个租户的用户授予角色"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = KEYSTONE_ENDPOINT_ADMIN + "/tenants/" + tenant_id + "/users/" + user_id + "/roles/OS-KSADM/" + role_id
+    r = requests.delete(url, headers=headers)
+    return r
+
+
+def add_tenant_user(token_id, tenant_id, user_id):
+    """给租户增加一个普通用户(角色为user)"""
+    all_roles = get_all_roles(token_id)
+    user_role_id = ""
+    for role in all_roles["roles"]:
+        if role["name"] == "user":
+            user_role_id = role["id"]
+            break
+    r = grant_tenant_user_role(token_id, tenant_id, user_id, user_role_id)
+    if r.status_code == 200:
+        return "success"
+    else:
+        return "failed"
+
+
+def del_tenant_user(token_id, tenant_id, user_id):
+    """删除租户的普通用户"""
+    user_roles = get_tenant_user_role(token_id, tenant_id, user_id)
+    status_code = "success"
+    for role in user_roles["roles"]:
+        r = revoke_tenant_user_role(token_id, tenant_id, user_id, role["id"])
+        if r.status_code != 204:
+            status_code = "failed"
+    return status_code
 
 
 if __name__ == "__main__":
@@ -248,8 +298,8 @@ if __name__ == "__main__":
     # print json.dumps(update_tenant("e90c0fdf0c364474b9c375a2e5a4e67d", "676d2619d151466e9d1da24b37a61e74", json.dumps(tenant)))
     # print json.dumps(create_user("e877e05d418d48acba0483e355e16a50", json.dumps(user)))
     # print json.dumps(get_tenant_basic_quota(admin_token_id, admin_tenant_id, "fab30037b2d54be484520cd16722f63c"))
-    print json.dumps(get_tenant_neutron_quota(admin_token_id, "fab30037b2d54be484520cd16722f63c"))
-    # print json.dumps(get_tenant_users(admin_token_id, admin_tenant_id))
+    # print json.dumps(get_tenant_neutron_quota(admin_token_id, "81a26ce5527b482581c9d004bd1a994d"))
+    # print json.dumps(get_tenant_users(admin_token_id, "81a26ce5527b482581c9d004bd1a994d"))
     user_data = {
         "user": {
             "email": "",
@@ -258,5 +308,5 @@ if __name__ == "__main__":
         }
     }
     # print json.dumps(update_user(admin_token_id, "4256e063bd9546e388a6db938bdd9cb1", json.dumps(user_data)))
-    # print json.dumps(get_all_tenants(admin_token_id))
+    print json.dumps(get_tenant_user_role(admin_token_id, "81a26ce5527b482581c9d004bd1a994d", "b3316fd36b58436aa035bf3844deb768"))
 
