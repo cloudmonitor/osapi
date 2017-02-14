@@ -205,13 +205,47 @@ def get_tenant_routers_info(admin_token_id, project_id):
     return r.json()
 
 
+def create_image(admin_token_id, admin_tenant_id, server_id, data):
+    """根据虚拟机id来创建快照"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
+    url = NOVA_ENDPOINT.format(tenant_id=admin_tenant_id) + "/servers/"+server_id+"/action"
+    r = requests.post(url=url, data=data, headers=headers)
+    return r.status_code
+
+
+def get_instance_vnc(admin_token_id, admin_tenant_id, server_id, data):
+    """获取虚拟机的vnc"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
+    url = NOVA_ENDPOINT.format(tenant_id=admin_tenant_id) + "/servers/"+server_id+"/action"
+    r = requests.post(url=url, data=data, headers=headers)
+    return r.json()
+
+
+def reboot_instance(admin_token_id, admin_tenant_id, server_id, data):
+    """软重启、硬重启虚拟机"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
+    url = NOVA_ENDPOINT.format(tenant_id=admin_tenant_id) + "/servers/"+server_id+"/action"
+    r = requests.post(url=url, data=data, headers=headers)
+    return r.status_code
+
+
+def delete_servers(token_id, tenant_id, servers_id_list):
+    """终止虚拟机"""
+    delete_status = {}
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    for i in range(len(servers_id_list["servers_ids"])):
+        url = NOVA_ENDPOINT.format(tenant_id=tenant_id) + "/servers/" + servers_id_list["servers_ids"][i]
+        r = requests.delete(url=url, headers=headers)
+        delete_status[servers_id_list["servers_ids"][i]] = r.status_code
+    return delete_status
+
+
 if __name__ == "__main__":
     admin_json = get_admin_token("admin", "admin")
     admin_tenant_id = admin_json['access']['token']['tenant']['id']
     admin_token_id = admin_json['access']['token']['id']
-    # print json.dumps(get_admin_tenant_limits(admin_token_id, admin_tenant_id, "fab30037b2d54be484520cd16722f63c"))
-    # print json.dumps(get_tenant_usage_abstract(admin_token_id,admin_tenant_id, "676d2619d151466e9d1da24b37a61e74"))
-    # print json.dumps(get_all_tenant_instances(admin_token_id, admin_tenant_id))
-    # print json.dumps(get_tenant_instances(admin_token_id, admin_tenant_id, "fab30037b2d54be484520cd16722f63c"))
-    print json.dumps(get_tenant_routers_info(admin_token_id, "fab30037b2d54be484520cd16722f63c"))
-    # print json.dumps(get_tenant_networks(admin_token_id, "fab30037b2d54be484520cd16722f63c"))
+    # create_image(admin_token_id, admin_tenant_id, "11515b34-6400-4444-aab7-b93fb0733979", '{"createImage" : {"name" : "foo-image"}}')
+    # print json.dumps(get_instance_vnc(admin_token_id, admin_tenant_id, "11515b34-6400-4444-aab7-b93fb0733979", '{"os-getVNCConsole": {"type": "novnc"}}'))
+    # print reboot_instance(admin_token_id, admin_tenant_id, "11515b34-6400-4444-aab7-b93fb0733979", '{"reboot" : {"type" : "SOFT"}}')
+    # s = '{"servers_ids":[11515b34-6400-4444-aab7-b93fb0733979,]}'
+    # delete_servers(admin_token_id, admin_tenant_id, json.loads(s))
