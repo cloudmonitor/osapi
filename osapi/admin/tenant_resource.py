@@ -205,7 +205,7 @@ def get_tenant_routers_info(admin_token_id, project_id):
     return r.json()
 
 
-def create_image(admin_token_id, admin_tenant_id, server_id, data):
+def admin_create_image(admin_token_id, admin_tenant_id, server_id, data):
     """根据虚拟机id来创建快照"""
     headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
     url = NOVA_ENDPOINT.format(tenant_id=admin_tenant_id) + "/servers/"+server_id+"/action"
@@ -213,7 +213,7 @@ def create_image(admin_token_id, admin_tenant_id, server_id, data):
     return r.status_code
 
 
-def get_instance_vnc(admin_token_id, admin_tenant_id, server_id, data):
+def admin_get_instance_vnc(admin_token_id, admin_tenant_id, server_id, data):
     """获取虚拟机的vnc"""
     headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
     url = NOVA_ENDPOINT.format(tenant_id=admin_tenant_id) + "/servers/"+server_id+"/action"
@@ -221,7 +221,7 @@ def get_instance_vnc(admin_token_id, admin_tenant_id, server_id, data):
     return r.json()
 
 
-def reboot_instance(admin_token_id, admin_tenant_id, server_id, data):
+def admin_reboot_instance(admin_token_id, admin_tenant_id, server_id, data):
     """软重启、硬重启虚拟机"""
     headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
     url = NOVA_ENDPOINT.format(tenant_id=admin_tenant_id) + "/servers/"+server_id+"/action"
@@ -229,7 +229,7 @@ def reboot_instance(admin_token_id, admin_tenant_id, server_id, data):
     return r.status_code
 
 
-def delete_servers(token_id, tenant_id, servers_id_list):
+def admin_delete_servers(token_id, tenant_id, servers_id_list):
     """终止虚拟机"""
     delete_status = {}
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
