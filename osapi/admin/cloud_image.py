@@ -21,6 +21,26 @@ def create_image(token_id, data):
     return r.json()
 
 
+def delete_image(admin_token_id, images_id_list):
+    """删除云镜像"""
+    images_id_list = json.loads(images_id_list)
+    delete_status = {}
+    headers = {"Content-type": "application/json", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
+    for i in range(len(images_id_list["images_ids"])):
+        url = GLANCE_ENDPOINT + "/images/"+images_id_list["images_ids"][i]
+        r = requests.delete(url=url, headers=headers)
+        delete_status[images_id_list["images_ids"][i]] = r.status_code
+    return delete_status
+
+
+def update_image(admin_token_id, image_id,data):
+    """更新云镜像"""
+    headers = {"Content-type": "application/openstack-images-v2.1-json-patch", "X-Auth-Token": admin_token_id, "Accept": "application/json"}
+    url = GLANCE_ENDPOINT + "/images/"+image_id
+    r = requests.patch(url=url, headers=headers, data=data)
+    return r.json()
+
+
 if __name__ == "__main__":
     from osapi.identify import get_admin_token
 
