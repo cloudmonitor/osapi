@@ -9,6 +9,7 @@ from osapi.admin.cloud_instance import *
 from osapi.admin.physical_host import get_hypervisor_detail
 from osapi.admin.tenant_user import get_tenant_name_by_tenant_id
 from osapi.admin.tenant_resource import get_all_tenant_usage
+from osapi.admin.cloud_image import get_all_images
 
 
 def get_all_usage_data(token_id, start_time, stop_time, tenant_id):
@@ -57,6 +58,9 @@ def get_num_info(admin_token_id, admin_tenant_id):
 
     tenant_num = len(get_all_tenants(admin_token_id)["tenants"])  # 获取租户数量
     num_info["tenant_num"] = tenant_num
+
+    image_num = len(get_all_images(admin_token_id)["images"])  # 获取镜像数量
+    num_info["image_num"] = image_num
 
     physical_num = len(get_hypervisor_detail(admin_token_id, admin_tenant_id)["hypervisors"])  # 获取物理机的个数
     num_info["physical_num"] = physical_num

@@ -308,5 +308,5 @@ if __name__ == "__main__":
         }
     }
     # print json.dumps(update_user(admin_token_id, "4256e063bd9546e388a6db938bdd9cb1", json.dumps(user_data)))
-    print json.dumps(get_tenant_user_role(admin_token_id, "81a26ce5527b482581c9d004bd1a994d", "b3316fd36b58436aa035bf3844deb768"))
+    print json.dumps(get_all_tenants(admin_token_id))
 

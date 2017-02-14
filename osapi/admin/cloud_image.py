@@ -20,3 +20,12 @@ def create_image(token_id, data):
     r = requests.post(url=url, data=data, headers=headers)
     return r.json()
 
+
+if __name__ == "__main__":
+    from osapi.identify import get_admin_token
+
+    admin_token = get_admin_token("admin", "admin")
+    admin_token_id = admin_token['access']['token']['id']
+    admin_tenant_id = admin_token['access']['token']['tenant']['id']
+    print json.dumps(get_all_images(admin_token_id))
+
