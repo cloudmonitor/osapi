@@ -39,6 +39,7 @@ def create_image(token_id, data, file_name):
     basedir = os.path.abspath('..//..//..')  # 获取本项目根目录的上一级目录
     file_dir = os.path.join(basedir, 'cloudmonitor', 'upload', file_name)
     image_info_bak = upload_image_info(token_id, image_id, file_dir)
+    os.remove(file_dir)
     return image_info_bak
 
 
