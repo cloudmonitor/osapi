@@ -8,7 +8,7 @@ from settings import *
 
 
 # region 云平台流量分析
-def get_top_tenant(curr_type):
+def get_cloud_top_tenant(curr_type):
     """统计云平台所有租户流量top 5"""
     conn = MongoHelper(FLOWDB_CONN).getconn()
     db = conn["flowdb"]
@@ -30,7 +30,7 @@ def get_top_tenant(curr_type):
     return list(result)
 
 
-def get_top_instance(curr_type):
+def get_cloud_top_instance(curr_type):
     """统计云平台所有虚拟机 TOP 10"""
     conn = MongoHelper(FLOWDB_CONN).getconn()
     db = conn["flowdb"]
@@ -52,7 +52,7 @@ def get_top_instance(curr_type):
     return list(result)
 
 
-def get_top_src_ip(curr_type):
+def get_cloud_top_src_ip(curr_type):
     """统计云平台最近流量中源IP-TOP 10"""
     conn = MongoHelper(FLOWDB_CONN).getconn()
     db = conn["flowdb"]
@@ -73,7 +73,7 @@ def get_top_src_ip(curr_type):
     return list(result)
 
 
-def get_top_dst_ip(curr_type):
+def get_cloud_top_dst_ip(curr_type):
     """统计云平台最近流量中目的IP-TOP 10"""
     conn = MongoHelper(FLOWDB_CONN).getconn()
     db = conn["flowdb"]
@@ -94,7 +94,7 @@ def get_top_dst_ip(curr_type):
     return list(result)
 
 
-def get_top_src_port(curr_type):
+def get_cloud_top_src_port(curr_type):
     """统计云平台最近流量中源PORT-TOP 10"""
     conn = MongoHelper(FLOWDB_CONN).getconn()
     db = conn["flowdb"]
@@ -116,7 +116,7 @@ def get_top_src_port(curr_type):
     return list(result)
 
 
-def get_top_dst_port(curr_type):
+def get_cloud_top_dst_port(curr_type):
     """统计云平台最近流量中目的PORT-TOP 10"""
     conn = MongoHelper(FLOWDB_CONN).getconn()
     db = conn["flowdb"]
@@ -138,7 +138,7 @@ def get_top_dst_port(curr_type):
     return list(result)
 
 
-def get_top_protocol_port(curr_type):
+def get_cloud_top_protocol_port(curr_type):
     """统计云平台最近流量协议和目的PORT-TOP 10"""
     conn = MongoHelper(FLOWDB_CONN).getconn()
     db = conn["flowdb"]
@@ -161,7 +161,7 @@ def get_top_protocol_port(curr_type):
     return list(result)
 
 
-def get_top_ip_link(curr_type):
+def get_cloud_top_ip_link(curr_type):
     """统计云平台最近流量源IP-目的IP-TOP 10"""
     conn = MongoHelper(FLOWDB_CONN).getconn()
     db = conn["flowdb"]
@@ -183,7 +183,7 @@ def get_top_ip_link(curr_type):
     return list(result)
 
 
-def get_top_session(curr_type):
+def get_cloud_top_session(curr_type):
     """统计云平台最近流量SESSION-TOP 10"""
     conn = MongoHelper(FLOWDB_CONN).getconn()
     db = conn["flowdb"]
