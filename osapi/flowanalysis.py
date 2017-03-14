@@ -9,7 +9,7 @@ from settings import *
 
 # region 云平台流量分析
 def get_cloud_top_tenant(curr_type):
-    """统计云平台所有租户流量top 5"""
+    """统计云平台所有租户流量top 10"""
     conn = MongoHelper(FLOWDB_CONN).getconn()
     db = conn["flowdb"]
     now_time = int(time.time() * 1000)
@@ -25,7 +25,7 @@ def get_cloud_top_tenant(curr_type):
                                 {"$group": {"_id": {"tenant_id": "$tenant_id", "tenant_name": "$tenant_name"},
                                             "count": {"$sum": "$size"}}},
                                 {"$sort": {"count": -1}},
-                                {"$limit": 5}])
+                                {"$limit": 10}])
     conn.close()
     return list(result)
 
@@ -211,7 +211,7 @@ def get_cloud_top_session(curr_type):
 
 # region 租户流量分析
 def get_tenant_top_instance(tenant_id, curr_type):
-    """统计租户最近流量中虚拟机 TOP 5"""
+    """统计租户最近流量中虚拟机 TOP 10"""
     conn = MongoHelper(FLOWDB_CONN).getconn()
     db = conn["flowdb"]
     now_time = int(time.time() * 1000)
@@ -228,7 +228,7 @@ def get_tenant_top_instance(tenant_id, curr_type):
                                 {"$group": {"_id": {"instance_id": "$instance_id", "instance_name": "$instance_name"},
                                             "count": {"$sum": "$size"}}},
                                 {"$sort": {"count": -1}},
-                                {"$limit": 5}])
+                                {"$limit": 10}])
     conn.close()
     return list(result)
 
